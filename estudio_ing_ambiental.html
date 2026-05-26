@@ -1,0 +1,1730 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EcoStudy — Ingeniería Ambiental</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&family=Fraunces:ital,wght@0,300;0,600;1,300&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0f0d;
+  --surface: #111a14;
+  --surface2: #162018;
+  --border: #243029;
+  --accent: #4ade80;
+  --accent2: #22c55e;
+  --accent3: #86efac;
+  --warn: #fbbf24;
+  --danger: #f87171;
+  --text: #e8f5e9;
+  --text2: #9dbfa3;
+  --text3: #5a7a60;
+  --card: #131f16;
+  --highlight: rgba(74,222,128,0.08);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'DM Mono',monospace;
+  min-height:100vh;
+  overflow-x:hidden;
+}
+/* BACKGROUND GRID */
+body::before{
+  content:'';
+  position:fixed;
+  inset:0;
+  background-image:
+    linear-gradient(rgba(74,222,128,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(74,222,128,0.03) 1px, transparent 1px);
+  background-size:40px 40px;
+  pointer-events:none;
+  z-index:0;
+}
+
+/* NAV */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  background:rgba(10,15,13,0.92);
+  backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--border);
+  padding:0 2rem;
+  height:64px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.logo{
+  font-family:'Syne',sans-serif;
+  font-weight:800;font-size:1.2rem;
+  color:var(--accent);
+  letter-spacing:-0.02em;
+}
+.logo span{color:var(--text2);font-weight:400;}
+.nav-tabs{display:flex;gap:.25rem;}
+.nav-tab{
+  background:none;border:none;cursor:pointer;
+  font-family:'DM Mono',monospace;font-size:.75rem;
+  color:var(--text3);padding:.5rem .8rem;border-radius:6px;
+  transition:.2s;
+}
+.nav-tab:hover,.nav-tab.active{
+  background:var(--highlight);color:var(--accent);
+}
+.xp-bar{
+  display:flex;align-items:center;gap:.75rem;font-size:.75rem;color:var(--text2);
+}
+.xp-pill{
+  background:var(--surface);border:1px solid var(--border);
+  padding:.3rem .7rem;border-radius:20px;
+  display:flex;align-items:center;gap:.4rem;
+}
+.xp-dot{width:8px;height:8px;border-radius:50%;background:var(--accent);box-shadow:0 0 8px var(--accent);}
+
+/* MAIN */
+main{
+  position:relative;z-index:1;
+  padding-top:64px;
+  min-height:100vh;
+}
+
+/* SECTIONS */
+.section{display:none;padding:2rem;max-width:1200px;margin:0 auto;}
+.section.active{display:block;}
+
+/* HERO */
+.hero{
+  padding:4rem 2rem 2rem;
+  max-width:1200px;margin:0 auto;
+  position:relative;z-index:1;
+}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:.5rem;
+  background:var(--highlight);border:1px solid rgba(74,222,128,0.2);
+  padding:.3rem .8rem;border-radius:20px;font-size:.75rem;color:var(--accent3);
+  margin-bottom:1.5rem;
+}
+h1.hero-title{
+  font-family:'Fraunces',serif;
+  font-size:clamp(2rem,5vw,3.5rem);
+  font-weight:600;line-height:1.1;
+  margin-bottom:1rem;
+}
+h1.hero-title em{color:var(--accent);font-style:italic;}
+.hero-sub{color:var(--text2);font-size:.9rem;line-height:1.7;max-width:600px;margin-bottom:2.5rem;}
+
+.card-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem;}
+.card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:12px;padding:1.5rem;cursor:pointer;
+  transition:.25s;position:relative;overflow:hidden;
+}
+.card::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(circle at top left, rgba(74,222,128,0.06), transparent 60%);
+  opacity:0;transition:.25s;
+}
+.card:hover{border-color:rgba(74,222,128,0.3);transform:translateY(-2px);}
+.card:hover::before{opacity:1;}
+.card-icon{font-size:2rem;margin-bottom:.75rem;}
+.card-title{font-family:'Syne',sans-serif;font-weight:700;font-size:1.05rem;margin-bottom:.4rem;}
+.card-desc{font-size:.78rem;color:var(--text2);line-height:1.6;}
+.card-tag{
+  display:inline-block;margin-top:.75rem;
+  font-size:.7rem;padding:.2rem .6rem;border-radius:10px;
+  background:var(--highlight);color:var(--accent3);
+}
+
+/* STUDY CONTENT */
+.unit-header{
+  display:flex;align-items:center;gap:1rem;margin-bottom:2rem;
+}
+.unit-badge{
+  width:48px;height:48px;border-radius:12px;
+  background:var(--highlight);border:1px solid rgba(74,222,128,0.2);
+  display:flex;align-items:center;justify-content:center;font-size:1.5rem;
+}
+.unit-title{font-family:'Syne',sans-serif;font-weight:800;font-size:1.5rem;}
+.unit-sub{font-size:.8rem;color:var(--text2);}
+
+.concept-block{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:12px;margin-bottom:1rem;overflow:hidden;
+}
+.concept-header{
+  padding:1rem 1.25rem;cursor:pointer;
+  display:flex;align-items:center;justify-content:space-between;
+  transition:.2s;
+}
+.concept-header:hover{background:var(--highlight);}
+.concept-header h3{font-family:'Syne',sans-serif;font-weight:700;font-size:.95rem;}
+.concept-body{
+  padding:0 1.25rem;max-height:0;overflow:hidden;transition:max-height .4s ease,padding .3s;
+}
+.concept-body.open{max-height:2000px;padding:1.25rem;}
+.concept-body p{font-size:.84rem;color:var(--text2);line-height:1.8;margin-bottom:.75rem;}
+.concept-body .def{
+  border-left:3px solid var(--accent);padding:.75rem 1rem;
+  background:rgba(74,222,128,0.04);border-radius:0 8px 8px 0;
+  font-size:.82rem;margin:.5rem 0;
+}
+.concept-body .def strong{color:var(--accent3);}
+.concept-body .formula{
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:8px;padding:.75rem 1rem;font-family:'DM Mono',monospace;
+  font-size:.88rem;color:var(--warn);margin:.5rem 0;text-align:center;
+}
+.concept-body .tip{
+  background:rgba(251,191,36,0.06);border:1px solid rgba(251,191,36,0.2);
+  border-radius:8px;padding:.75rem 1rem;font-size:.8rem;color:var(--warn);
+}
+
+/* TABLES */
+.study-table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.8rem;}
+.study-table th{
+  background:var(--surface2);color:var(--accent3);
+  padding:.6rem .75rem;text-align:left;border-bottom:2px solid var(--border);
+  font-family:'Syne',sans-serif;font-weight:600;
+}
+.study-table td{
+  padding:.6rem .75rem;border-bottom:1px solid var(--border);
+  color:var(--text2);vertical-align:top;line-height:1.6;
+}
+.study-table tr:hover td{background:var(--highlight);}
+
+/* QUIZ */
+.quiz-container{max-width:800px;margin:0 auto;}
+.quiz-meta{
+  display:flex;gap:1rem;margin-bottom:1.5rem;flex-wrap:wrap;
+}
+.quiz-badge{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:8px;padding:.4rem .8rem;font-size:.75rem;color:var(--text2);
+  display:flex;align-items:center;gap:.4rem;
+}
+.progress-bar{
+  height:4px;background:var(--surface2);border-radius:2px;
+  margin-bottom:2rem;overflow:hidden;
+}
+.progress-fill{height:100%;background:var(--accent);border-radius:2px;transition:.4s;}
+
+.question-card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:16px;padding:1.75rem;margin-bottom:1.5rem;
+}
+.q-type{
+  font-size:.7rem;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:.5rem;
+}
+.q-number{color:var(--accent);font-size:.8rem;margin-bottom:.75rem;}
+.q-text{font-family:'Fraunces',serif;font-weight:300;font-size:1.05rem;line-height:1.6;margin-bottom:1.25rem;}
+
+.options{display:flex;flex-direction:column;gap:.5rem;}
+.option{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:8px;padding:.75rem 1rem;cursor:pointer;
+  font-size:.84rem;color:var(--text2);transition:.2s;
+  display:flex;align-items:flex-start;gap:.75rem;
+}
+.option:hover{border-color:rgba(74,222,128,0.3);color:var(--text);}
+.option.selected{border-color:var(--accent);background:var(--highlight);color:var(--text);}
+.option.correct{border-color:var(--accent2)!important;background:rgba(34,197,94,0.12)!important;color:var(--accent3)!important;}
+.option.wrong{border-color:var(--danger)!important;background:rgba(248,113,113,0.08)!important;color:var(--danger)!important;}
+.option-key{
+  width:24px;height:24px;border-radius:6px;
+  background:var(--surface2);border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  font-size:.75rem;flex-shrink:0;font-family:'Syne',sans-serif;font-weight:700;
+}
+
+.tf-options{display:flex;gap:.75rem;}
+.tf-btn{
+  flex:1;background:var(--surface);border:1px solid var(--border);
+  border-radius:8px;padding:.85rem;cursor:pointer;
+  font-family:'Syne',sans-serif;font-weight:700;font-size:.9rem;
+  color:var(--text2);transition:.2s;text-align:center;
+}
+.tf-btn:hover{border-color:rgba(74,222,128,0.3);}
+.tf-btn.selected{border-color:var(--accent);background:var(--highlight);color:var(--accent);}
+.tf-btn.correct{border-color:var(--accent2)!important;background:rgba(34,197,94,0.12)!important;color:var(--accent3)!important;}
+.tf-btn.wrong{border-color:var(--danger)!important;background:rgba(248,113,113,0.08)!important;color:var(--danger)!important;}
+
+.open-textarea{
+  width:100%;background:var(--surface);border:1px solid var(--border);
+  border-radius:8px;padding:.85rem;color:var(--text);
+  font-family:'DM Mono',monospace;font-size:.82rem;line-height:1.6;
+  resize:vertical;min-height:100px;transition:.2s;
+}
+.open-textarea:focus{outline:none;border-color:rgba(74,222,128,0.4);}
+
+.feedback-block{
+  margin-top:1rem;padding:1rem;border-radius:8px;font-size:.82rem;line-height:1.6;
+  display:none;
+}
+.feedback-block.show{display:block;}
+.feedback-block.correct-fb{background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.2);color:var(--accent3);}
+.feedback-block.wrong-fb{background:rgba(248,113,113,0.06);border:1px solid rgba(248,113,113,0.2);color:#fca5a5;}
+
+.btn{
+  background:var(--accent);color:#0a0f0d;
+  border:none;padding:.7rem 1.4rem;border-radius:8px;cursor:pointer;
+  font-family:'Syne',sans-serif;font-weight:700;font-size:.85rem;
+  transition:.2s;
+}
+.btn:hover{background:var(--accent2);}
+.btn.outline{background:none;border:1px solid var(--border);color:var(--text2);}
+.btn.outline:hover{border-color:var(--accent);color:var(--accent);background:var(--highlight);}
+.btn-row{display:flex;gap:.75rem;margin-top:1.25rem;flex-wrap:wrap;}
+
+/* SCORE */
+.score-card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:16px;padding:2.5rem;text-align:center;
+}
+.score-big{
+  font-family:'Fraunces',serif;font-size:5rem;font-weight:600;
+  color:var(--accent);line-height:1;margin-bottom:.5rem;
+}
+.score-label{color:var(--text2);font-size:.85rem;margin-bottom:1.5rem;}
+.score-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;margin:1.5rem 0;}
+.score-stat{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:10px;padding:1rem;
+}
+.score-stat-val{font-family:'Syne',sans-serif;font-weight:800;font-size:1.5rem;color:var(--accent3);}
+.score-stat-lbl{font-size:.72rem;color:var(--text3);margin-top:.2rem;}
+
+/* VISUAL DIAGRAMS */
+.diagram-box{
+  background:var(--surface2);border:1px solid var(--border);
+  border-radius:12px;padding:1.5rem;margin:1rem 0;
+  position:relative;overflow:hidden;
+}
+.curve-j{
+  width:100%;height:180px;
+}
+.pyramid-container{display:flex;gap:1.5rem;flex-wrap:wrap;justify-content:center;}
+.pyramid{text-align:center;}
+.pyramid-bar{
+  margin:2px auto;background:var(--accent);border-radius:3px;
+  opacity:0.7;transition:.3s;
+}
+.pyramid-bar:hover{opacity:1;}
+.pyramid-label{font-size:.7rem;color:var(--text3);margin-top:.5rem;}
+
+/* CHEAT SHEET */
+.sheet-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem;}
+.sheet-card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:10px;padding:1.25rem;
+}
+.sheet-card h4{font-family:'Syne',sans-serif;font-weight:700;font-size:.88rem;color:var(--accent3);margin-bottom:.75rem;}
+.sheet-card li{font-size:.78rem;color:var(--text2);margin-bottom:.4rem;padding-left:.75rem;position:relative;line-height:1.5;}
+.sheet-card li::before{content:'→';position:absolute;left:0;color:var(--accent);font-size:.7rem;}
+
+/* EXAM TIMER */
+.timer-display{
+  font-family:'Syne',sans-serif;font-size:2.5rem;font-weight:800;
+  color:var(--warn);text-align:center;margin-bottom:1.5rem;
+  text-shadow:0 0 20px rgba(251,191,36,0.3);
+}
+.timer-display.danger{color:var(--danger);text-shadow:0 0 20px rgba(248,113,113,0.3);}
+
+/* LEVEL SELECTOR */
+.level-selector{display:flex;gap:.75rem;margin-bottom:1.5rem;flex-wrap:wrap;}
+.level-btn{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:8px;padding:.5rem 1rem;cursor:pointer;
+  font-family:'Syne',sans-serif;font-weight:700;font-size:.78rem;
+  color:var(--text2);transition:.2s;
+}
+.level-btn:hover,.level-btn.active{border-color:var(--accent);color:var(--accent);background:var(--highlight);}
+.level-btn.hard.active{border-color:var(--danger);color:var(--danger);background:rgba(248,113,113,0.08);}
+.level-btn.medium.active{border-color:var(--warn);color:var(--warn);background:rgba(251,191,36,0.08);}
+
+/* MNEMONIC */
+.mnemonic-box{
+  background:linear-gradient(135deg,rgba(74,222,128,0.06),rgba(34,197,94,0.02));
+  border:1px solid rgba(74,222,128,0.2);
+  border-radius:12px;padding:1.25rem;margin:1rem 0;
+}
+.mnemonic-title{font-family:'Syne',sans-serif;font-weight:700;color:var(--accent);margin-bottom:.5rem;font-size:.88rem;}
+.mnemonic-content{font-size:.85rem;color:var(--text2);line-height:1.7;}
+.mnemonic-word{color:var(--accent3);font-weight:500;}
+
+/* TABS inside section */
+.sub-tabs{display:flex;gap:.25rem;margin-bottom:1.5rem;overflow-x:auto;padding-bottom:.25rem;}
+.sub-tab{
+  background:none;border:1px solid var(--border);cursor:pointer;
+  font-family:'DM Mono',monospace;font-size:.75rem;white-space:nowrap;
+  color:var(--text3);padding:.45rem .85rem;border-radius:6px;transition:.2s;
+}
+.sub-tab:hover,.sub-tab.active{
+  background:var(--highlight);border-color:rgba(74,222,128,0.3);color:var(--accent);
+}
+.sub-section{display:none;}
+.sub-section.active{display:block;}
+
+/* ANIMATIONS */
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.section.active{animation:fadeIn .3s ease;}
+.concept-block{animation:fadeIn .3s ease;}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:6px;height:6px;}
+::-webkit-scrollbar-track{background:var(--bg);}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
+
+/* RESPONSIVE */
+@media(max-width:600px){
+  nav{padding:0 1rem;}
+  .nav-tab{padding:.4rem .5rem;font-size:.68rem;}
+  .hero{padding:2rem 1rem 1rem;}
+  .section{padding:1rem;}
+  h1.hero-title{font-size:1.8rem;}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">Eco<span>Study</span></div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="showSection('home')">🏠 Inicio</button>
+    <button class="nav-tab" onclick="showSection('unit1')">🌍 Unidad 1</button>
+    <button class="nav-tab" onclick="showSection('unit2')">🌿 Unidad 2</button>
+    <button class="nav-tab" onclick="showSection('quiz')">📝 Quiz</button>
+    <button class="nav-tab" onclick="showSection('exam')">⏱ Parcial</button>
+    <button class="nav-tab" onclick="showSection('cheatsheet')">📋 Resumen</button>
+  </div>
+  <div class="xp-bar">
+    <div class="xp-pill"><div class="xp-dot"></div><span id="xp-display">XP: 0</span></div>
+  </div>
+</nav>
+
+<main>
+<!-- HOME -->
+<div id="home" class="section active">
+  <div class="hero">
+    <div class="hero-badge">🎓 Ingeniería Ambiental — Material de Estudio Interactivo</div>
+    <h1 class="hero-title">Aprende, practica<br>y <em>domina</em> el tema.</h1>
+    <p class="hero-sub">Plataforma interactiva basada exactamente en tus documentos del profesor. Estudia los conceptos, haz quizzes con calificación automática y simula tu parcial.</p>
+
+    <div class="card-grid">
+      <div class="card" onclick="showSection('unit1')">
+        <div class="card-icon">📊</div>
+        <div class="card-title">Unidad 1 — Dinámica Poblacional</div>
+        <div class="card-desc">Natalidad, mortalidad, tasas de crecimiento, curvas J y S, pirámides poblacionales, Panamá.</div>
+        <div class="card-tag">12 conceptos clave</div>
+      </div>
+      <div class="card" onclick="showSection('unit2')">
+        <div class="card-icon">🌳</div>
+        <div class="card-title">Unidad 2 — Ecosistemas</div>
+        <div class="card-desc">Estructura, niveles tróficos, flujo de energía, ciclos del carbono, nitrógeno, fósforo y agua.</div>
+        <div class="card-tag">15 conceptos clave</div>
+      </div>
+      <div class="card" onclick="showSection('quiz')">
+        <div class="card-icon">🎯</div>
+        <div class="card-title">Quiz Adaptativo</div>
+        <div class="card-desc">3 niveles de dificultad. Opción múltiple, V/F y desarrollo. Feedback inmediato con explicaciones.</div>
+        <div class="card-tag">60+ preguntas</div>
+      </div>
+      <div class="card" onclick="showSection('exam')">
+        <div class="card-icon">⏱️</div>
+        <div class="card-title">Simulacro de Parcial</div>
+        <div class="card-desc">Examen cronometrado como el real. 20 preguntas, 45 minutos. Calificación sobre 100 puntos.</div>
+        <div class="card-tag">Nivel examen real</div>
+      </div>
+      <div class="card" onclick="showSection('cheatsheet')">
+        <div class="card-icon">📋</div>
+        <div class="card-title">Hoja de Repaso Rápido</div>
+        <div class="card-desc">Todos los conceptos, fórmulas y reglas mnemotécnicas en una sola vista. Imprimible.</div>
+        <div class="card-tag">Para repasar rápido</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- UNIT 1 -->
+<div id="unit1" class="section">
+  <div class="unit-header">
+    <div class="unit-badge">📊</div>
+    <div>
+      <div class="unit-title">Dinámica Poblacional</div>
+      <div class="unit-sub">Ingeniería Ambiental · Documento 1</div>
+    </div>
+  </div>
+
+  <div class="sub-tabs">
+    <button class="sub-tab active" onclick="showSubSection('u1','u1-conceptos')">📖 Conceptos</button>
+    <button class="sub-tab" onclick="showSubSection('u1','u1-diagramas')">📈 Diagramas</button>
+    <button class="sub-tab" onclick="showSubSection('u1','u1-panama')">🇵🇦 Panamá</button>
+    <button class="sub-tab" onclick="showSubSection('u1','u1-mnemonic')">🧠 Memorizar</button>
+  </div>
+
+  <div id="u1-conceptos" class="sub-section active">
+
+    <div class="concept-block">
+      <div class="concept-header" onclick="toggleConcept(this)">
+        <h3>🎯 Propiedades y Elementos de la Dinámica Poblacional</h3><span>▼</span>
+      </div>
+      <div class="concept-body">
+        <p>Las poblaciones <strong>varían a lo largo del tiempo</strong>. Los cuatro elementos que determinan esta variación son:</p>
+        <div class="def"><strong>Natalidad (B):</strong> número de nacimientos en la población por unidad de tiempo.</div>
+        <div class="def"><strong>Mortalidad (D):</strong> número de muertes por unidad de tiempo.</div>
+        <div class="def"><strong>Inmigración (I):</strong> individuos que entran a la población provenientes de afuera.</div>
+        <div class="def"><strong>Emigración (E):</strong> individuos que salen de la población.</div>
+        <p>Para que una población sea estable debe existir un equilibrio natural entre nacimientos y muertes.</p>
+      </div>
+    </div>
+
+    <div class="concept-block">
+      <div class="concept-header" onclick="toggleConcept(this)">
+        <h3>⚖️ Resistencia Ambiental</h3><span>▼</span>
+      </div>
+      <div class="concept-body">
+        <div class="def"><strong>Resistencia Ambiental:</strong> conjunto de factores que limitan el crecimiento ilimitado de una población. Incluye los recursos ambientales disponibles y las relaciones interespecíficas e intraespecíficas dentro del ecosistema.</div>
+        <p>Sin resistencia ambiental, toda población crecería exponencialmente de manera indefinida (curva J). La resistencia ambiental hace que el crecimiento real sea logístico (curva S).</p>
+        <div class="tip">💡 Factores de resistencia: escasez de alimento, depredadores, enfermedades, competencia por espacio.</div>
+      </div>
+    </div>
+
+    <div class="concept-block">
+      <div class="concept-header" onclick="toggleConcept(this)">
+        <h3>📐 Tasa de Crecimiento (r)</h3><span>▼</span>
+      </div>
+      <div class="concept-body">
+        <p>La <strong>tasa o índice de crecimiento r</strong> indica si una población crece, decrece o está en equilibrio:</p>
+        <div class="formula">r = 0 → Equilibrio poblacional (nacimientos = muertes)</div>
+        <div class="formula">r &gt; 0 → Crecimiento de la población</div>
+        <div class="formula">r &lt; 0 → Decrecimiento poblacional</div>
+        <p>Esta tasa puede variar dependiendo de la dinámica interna y externa de la población.</p>
+      </div>
+    </div>
+
+    <div class="concept-block">
+      <div class="concept-header" onclick="toggleConcept(this)">
+        <h3>📈 Curva J — Crecimiento Exponencial</h3><span>▼</span>
+      </div>
+      <div class="concept-body">
+        <div class="def"><strong>Curva J:</strong> modelo de crecimiento exponencial, acelerado e ilimitado en el número de individuos.</div>
+        <p>Características clave:</p>
+        <p>• Es un modelo <em>ideal</em>, no se mantiene perpetuamente en la naturaleza.<br>
+           • La Resistencia Ambiental limita la progresión geométrica que la caracteriza.<br>
+           • Se observa al inicio de la colonización de un nuevo hábitat o tras una catástrofe.</p>
+        <div class="tip">💡 Ejemplo: una bacteria en un cultivo nuevo, o conejos introducidos en Australia.</div>
+      </div>
+    </div>
+
+    <div class="concept-block">
+      <div class="concept-header" onclick="toggleConcept(this)">
+        <h3>📉 Curva S — Crecimiento Logístico</h3><span>▼</span>
+      </div>
+      <div class="concept-body">
+        <div class="def"><strong>Curva S (Logística):</strong> la más representativa de lo que ocurre en la naturaleza. La población crece rápido al inicio, luego se desacelera al acercarse a la Capacidad de Carga (K) y finalmente se estabiliza.</div>
+        <div class="def"><strong>Capacidad de Carga (K):</strong> el número máximo de individuos que un ambiente puede sostener de manera sostenible con los recursos disponibles.</div>
+        <p>Fases de la curva S:</p>
+        <p>① Fase lag (inicio lento) → ② Crecimiento exponencial → ③ Desaceleración → ④ Estabilización en K</p>
+        <div class="tip">💡 La curva S refleja la acción de la resistencia ambiental sobre el crecimiento poblacional.</div>
+      </div>
+    </div>
+
+    <div class="concept-block">
+      <div class="concept-header" onclick="toggleConcept(this)">
+        <h3>🔺 Pirámides Poblacionales</h3><span>▼</span>
+      </div>
+      <div class="concept-body">
+        <p>Las <strong>pirámides poblacionales</strong> son representaciones gráficas que muestran variables o parámetros de una población (edad, sexo, etc.).</p>
+        <div class="def"><strong>Pirámide A (expansiva/triangular):</strong> base ancha y cima estrecha. Indica una <em>población en crecimiento</em>. Muchos jóvenes y pocos adultos mayores. Alta natalidad y mortalidad.</div>
+        <div class="def"><strong>Pirámide B (estacionaria/rectangular):</strong> distribución uniforme por edades. Indica una <em>población estable</em>. Natalidad y mortalidad equilibradas.</div>
+        <div class="def"><strong>Pirámide C (regresiva/invertida):</strong> base estrecha y cima amplia. Indica una <em>población en decadencia</em>. Baja natalidad, alta longevidad.</div>
+      </div>
+    </div>
+
+    <div class="concept-block">
+      <div class="concept-header" onclick="toggleConcept(this)">
+        <h3>📊 Curva de Supervivencia</h3><span>▼</span>
+      </div>
+      <div class="concept-body">
+        <p>Las <strong>curvas de supervivencia</strong> muestran cómo la tasa de supervivencia varía a lo largo de la vida de los individuos de una población. Se trazan graficando el número de sobrevivientes vs. la edad.</p>
+        <div class="def"><strong>Tipo I:</strong> alta supervivencia hasta edades avanzadas, luego mortalidad rápida (humanos, grandes mamíferos).</div>
+        <div class="def"><strong>Tipo II:</strong> mortalidad constante a todas las edades (aves).</div>
+        <div class="def"><strong>Tipo III:</strong> alta mortalidad en edades tempranas, luego supervivencia estable (peces, plantas).</div>
+      </div>
+    </div>
+
+    <h3 style="font-family:'Syne',sans-serif;margin:1.5rem 0 1rem;color:var(--accent3);">Tabla Comparativa: Curva J vs Curva S</h3>
+    <table class="study-table">
+      <tr><th>Característica</th><th>Curva J (Exponencial)</th><th>Curva S (Logística)</th></tr>
+      <tr><td>Tipo de crecimiento</td><td>Acelerado, ilimitado</td><td>Limitado, se estabiliza</td></tr>
+      <tr><td>Patrón</td><td>Progresión geométrica</td><td>Sigmoidal</td></tr>
+      <tr><td>¿Existe en naturaleza?</td><td>Es ideal/teórico</td><td>Es el más real/normal</td></tr>
+      <tr><td>Resistencia Ambiental</td><td>No la considera</td><td>La incorpora</td></tr>
+      <tr><td>Capacidad de Carga (K)</td><td>No tiene límite</td><td>Se estabiliza en K</td></tr>
+      <tr><td>Tasa r</td><td>Constante y alta</td><td>Decrece al acercarse a K</td></tr>
+    </table>
+  </div>
+
+  <div id="u1-diagramas" class="sub-section">
+    <h3 style="font-family:'Syne',sans-serif;margin-bottom:1rem;color:var(--accent3);">📈 Curva J — Crecimiento Exponencial</h3>
+    <div class="diagram-box">
+      <canvas id="curveJ" class="curve-j"></canvas>
+    </div>
+
+    <h3 style="font-family:'Syne',sans-serif;margin:1.5rem 0 1rem;color:var(--accent3);">📉 Curva S — Crecimiento Logístico</h3>
+    <div class="diagram-box">
+      <canvas id="curveS" class="curve-j"></canvas>
+    </div>
+
+    <h3 style="font-family:'Syne',sans-serif;margin:1.5rem 0 1rem;color:var(--accent3);">🔺 Pirámides Poblacionales A, B y C</h3>
+    <div class="diagram-box">
+      <div class="pyramid-container" id="pyramids"></div>
+    </div>
+
+    <h3 style="font-family:'Syne',sans-serif;margin:1.5rem 0 1rem;color:var(--accent3);">📊 Tasa de Crecimiento r — Significado Visual</h3>
+    <div class="diagram-box">
+      <canvas id="rateChart" class="curve-j"></canvas>
+    </div>
+  </div>
+
+  <div id="u1-panama" class="sub-section">
+    <h3 style="font-family:'Syne',sans-serif;margin-bottom:1rem;color:var(--accent3);">🇵🇦 Dinámica Poblacional Panameña</h3>
+    <div class="concept-block">
+      <div class="concept-header" onclick="toggleConcept(this)">
+        <h3>Instituto Nacional de Estadística y Censo (INEC)</h3><span>▼</span>
+      </div>
+      <div class="concept-body">
+        <div class="def"><strong>INEC:</strong> organismo responsable de la dinámica y estadísticas de la población en Panamá. Está <em>adscrito a la Contraloría General de la República</em>.</div>
+        <p>El INEC realiza los censos nacionales, encuestas de hogares y levanta los datos que permiten analizar:</p>
+        <p>• Pirámide poblacional panameña<br>• Índice de crecimiento nacional<br>• Población total y distribución por regiones<br>• Población multidimensionalmente pobre</p>
+      </div>
+    </div>
+    <div class="concept-block">
+      <div class="concept-header" onclick="toggleConcept(this)">
+        <h3>Características clave de la población panameña</h3><span>▼</span>
+      </div>
+      <div class="concept-body">
+        <p>Panamá presenta una pirámide poblacional de transición: la base se ha reducido en comparación con décadas anteriores, lo que refleja una disminución en la tasa de natalidad. Esto indica que Panamá se encuentra en una transición demográfica hacia mayor estabilidad poblacional.</p>
+        <div class="def"><strong>Población Multidimensional Pobre:</strong> medida que va más allá del ingreso y considera privaciones en educación, salud, servicios básicos y calidad de vida.</div>
+        <div class="tip">💡 Para examen: El INEC está adscrito a la Contraloría General de la República. ¡Dato preciso que preguntan!</div>
+      </div>
+    </div>
+    <table class="study-table">
+      <tr><th>Indicador</th><th>Definición</th><th>Relevancia para Ing. Ambiental</th></tr>
+      <tr><td>Tasa de natalidad</td><td>Nacimientos por cada 1000 hab/año</td><td>Proyecciones de demanda de recursos</td></tr>
+      <tr><td>Tasa de mortalidad</td><td>Muertes por cada 1000 hab/año</td><td>Indicador de salud ambiental</td></tr>
+      <tr><td>Índice de crecimiento r</td><td>Tasa de cambio poblacional</td><td>Planificación de infraestructura</td></tr>
+      <tr><td>Población pobre multidimensional</td><td>Privaciones en múltiples dimensiones</td><td>Vulnerabilidad ambiental</td></tr>
+    </table>
+  </div>
+
+  <div id="u1-mnemonic" class="sub-section">
+    <h3 style="font-family:'Syne',sans-serif;margin-bottom:1rem;color:var(--accent3);">🧠 Técnicas de Memorización</h3>
+
+    <div class="mnemonic-box">
+      <div class="mnemonic-title">📌 BIDE — Los 4 elementos de la dinámica</div>
+      <div class="mnemonic-content">
+        <span class="mnemonic-word">B</span>-Births (Natalidad) &nbsp;|&nbsp;
+        <span class="mnemonic-word">I</span>-Inmigración &nbsp;|&nbsp;
+        <span class="mnemonic-word">D</span>-Deaths (Mortalidad) &nbsp;|&nbsp;
+        <span class="mnemonic-word">E</span>-Emigración<br><br>
+        <em>Recuerda: "Cuando BIDE, la población decide"</em>
+      </div>
+    </div>
+
+    <div class="mnemonic-box">
+      <div class="mnemonic-title">📌 r — La regla del signo</div>
+      <div class="mnemonic-content">
+        <span class="mnemonic-word">r = 0</span> → Cero cambio → Equilibrio<br>
+        <span class="mnemonic-word">r &gt; 0</span> → Positivo → ¡Crecimiento! (más personas llegan)<br>
+        <span class="mnemonic-word">r &lt; 0</span> → Negativo → Decrecimiento (la población decrece)<br><br>
+        <em>Tip: Piensa en r como un termómetro: si sube (>0) hay fiebre (crecimiento); si baja (<0) hay hipotermia (decrecimiento).</em>
+      </div>
+    </div>
+
+    <div class="mnemonic-box">
+      <div class="mnemonic-title">📌 Pirámides — ABC del crecimiento</div>
+      <div class="mnemonic-content">
+        <span class="mnemonic-word">A</span> = Amplia base = Adolescentes/jóvenes abundantes = ¡crecIMIENTO!<br>
+        <span class="mnemonic-word">B</span> = Balanced (equilibrada) = eSTABLE<br>
+        <span class="mnemonic-word">C</span> = Cima ancha = Canas (viejos) dominan = deCadencia
+      </div>
+    </div>
+
+    <div class="mnemonic-box">
+      <div class="mnemonic-title">📌 Curva J vs S</div>
+      <div class="mnemonic-content">
+        <span class="mnemonic-word">J</span> = "¡Jala sin freno!" → exponencial, sin límite<br>
+        <span class="mnemonic-word">S</span> = "Se Sostiene" → logística, llega a K y se estabiliza<br><br>
+        La <span class="mnemonic-word">S</span> tiene una <span class="mnemonic-word">K</span> arriba: es la Capacidad de Carga que la detiene.
+      </div>
+    </div>
+
+    <div class="mnemonic-box">
+      <div class="mnemonic-title">📌 INEC — Dato exacto</div>
+      <div class="mnemonic-content">
+        <strong>I</strong>nstituto <strong>N</strong>acional de <strong>E</strong>stadística y <strong>C</strong>enso → adscrito a la <span class="mnemonic-word">Contraloría General de la República</span>.<br>
+        Regla: "el INEC le rinde CONTROL a la CONTRALORÍA"
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- UNIT 2 -->
+<div id="unit2" class="section">
+  <div class="unit-header">
+    <div class="unit-badge">🌿</div>
+    <div>
+      <div class="unit-title">Ecosistemas y su Funcionamiento</div>
+      <div class="unit-sub">Ingeniería Ambiental · Documento 2</div>
+    </div>
+  </div>
+
+  <div class="sub-tabs">
+    <button class="sub-tab active" onclick="showSubSection('u2','u2-estructura')">🏗 Estructura</button>
+    <button class="sub-tab" onclick="showSubSection('u2','u2-energia')">⚡ Energía</button>
+    <button class="sub-tab" onclick="showSubSection('u2','u2-ciclos')">🔄 Ciclos</button>
+    <button class="sub-tab" onclick="showSubSection('u2','u2-interacciones')">🔗 Interacciones</button>
+    <button class="sub-tab" onclick="showSubSection('u2','u2-mnemonic2')">🧠 Memorizar</button>
+  </div>
+
+  <div id="u2-estructura" class="sub-section active">
+    <div class="concept-block">
+      <div class="concept-header" onclick="toggleConcept(this)">
+        <h3>🌍 Definición de Ecosistema</h3><span>▼</span>
+      </div>
+      <div class="concept-body">
+        <div class="def"><strong>Ecosistema:</strong> conjunto formado por un biotopo y una biocenosis y las relaciones que se establecen entre ellos. Sistema complejo donde los seres vivos interactúan entre sí y con los factores abióticos del medioambiente.</div>
+        <div class="def"><strong>Biotopo:</strong> el componente físico/abiótico del ecosistema (suelo, agua, clima, temperatura, luz).</div>
+        <div class="def"><strong>Biocenosis:</strong> el componente biótico: todos los seres vivos que habitan en el biotopo.</div>
+      </div>
+    </div>
+
+    <div class="concept-block">
+      <div class="concept-header" onclick="toggleConcept(this)">
+        <h3>🗂 Tipos de Ecosistemas</h3><span>▼</span>
+      </div>
+      <div class="concept-body">
+        <table class="study-table">
+          <tr><th>Tipo</th><th>Subtipos</th><th>Características</th></tr>
+          <tr><td><strong>1. Acuático</strong></td><td>Marino / Agua dulce</td><td>Cubiertas de agua de forma permanente</td></tr>
+          <tr><td><strong>2. Terrestre</strong></td><td>Bosques, Matorrales, Herbazales, Tundra, Desierto</td><td>Suelo como sustrato principal</td></tr>
+          <tr><td><strong>3. Híbrido (Humedal)</strong></td><td>Pantano, Ciénaga</td><td>Suelos cubiertos de agua dulce o salada permanente o estacionalmente</td></tr>
+        </table>
+        <div class="tip">💡 Para examen: el ecosistema HÍBRIDO es el ecosistema inundable o humedal (pantano, ciénaga). ¡No confundir con acuático!</div>
+      </div>
+    </div>
+
+    <div class="concept-block">
+      <div class="concept-header" onclick="toggleConcept(this)">
+        <h3>🍽 Niveles Tróficos y Cadena Alimentaria</h3><span>▼</span>
+      </div>
+      <div class="concept-body">
+        <div class="def"><strong>Niveles tróficos:</strong> posición que ocupa un organismo en la cadena alimentaria según cómo obtiene su energía.</div>
+        <div class="def"><strong>Productores (1er nivel):</strong> organismos autótrofos que capturan energía solar mediante fotosíntesis (plantas, algas, cianobacterias).</div>
+        <div class="def"><strong>Consumidores primarios (2do nivel):</strong> herbívoros que se alimentan de productores.</div>
+        <div class="def"><strong>Consumidores secundarios (3er nivel):</strong> carnívoros que se alimentan de herbívoros.</div>
+        <div class="def"><strong>Consumidores terciarios (4to nivel):</strong> superdepredadores.</div>
+        <div class="def"><strong>Descomponedores:</strong> bacterias y hongos que degradan materia orgánica muerta y liberan nutrientes al suelo.</div>
+        <p>La energía fluye en <strong>una sola dirección</strong>: del Sol → productores → consumidores → descomponedores. En cada nivel se pierde aproximadamente un 90% de la energía (regla del 10%).</p>
+      </div>
+    </div>
+  </div>
+
+  <div id="u2-energia" class="sub-section">
+    <div class="concept-block">
+      <div class="concept-header" onclick="toggleConcept(this)">
+        <h3>☀️ Flujo de Energía en los Ecosistemas</h3><span>▼</span>
+      </div>
+      <div class="concept-body">
+        <div class="def"><strong>Fuente primaria de energía:</strong> el Sol. Toda la energía que sostiene la vida en los ecosistemas proviene del Sol.</div>
+        <p>Dos grandes procesos:</p>
+        <div class="def"><strong>Flujo de energía:</strong> unidireccional. La energía no se recicla: pasa del Sol a los productores, luego a los consumidores y finalmente se disipa como calor. <em>La materia se recicla; la energía fluye y se pierde.</em></div>
+        <div class="def"><strong>Ciclo de materia:</strong> cerrado. Los elementos químicos pasan del suelo/agua/aire a los organismos y vuelven al ambiente tras la descomposición.</div>
+        <div class="tip">💡 Frase clave del documento: "la materia se recicla –en un ciclo cerrado– y la energía pasa o fluye generando organización y vida en el ecosistema."</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="u2-ciclos" class="sub-section">
+    <div class="concept-block">
+      <div class="concept-header" onclick="toggleConcept(this)">
+        <h3>💧 Ciclo del Agua</h3><span>▼</span>
+      </div>
+      <div class="concept-body">
+        <p>El ciclo del agua (hidrológico) involucra: evaporación, transpiración, condensación, precipitación, escorrentía e infiltración. Es fundamental para el movimiento de nutrientes en los ecosistemas.</p>
+        <div class="tip">💡 El documento lo menciona como parte del ciclo de nutrientes y el flujo de energía.</div>
+      </div>
+    </div>
+
+    <div class="concept-block">
+      <div class="concept-header" onclick="toggleConcept(this)">
+        <h3>🔥 Ciclo del Carbono</h3><span>▼</span>
+      </div>
+      <div class="concept-body">
+        <p>El ciclo del carbono se divide en tres fases:</p>
+        <div class="def"><strong>1. Producción:</strong> procesos que emiten carbono. La biósfera exhala CO₂ en la respiración y en la descomposición/fermentación expulsa CO₂ y CH₄. La hidrosfera emite CO₂ disuelto al aumentar temperatura. La litósfera desprende CO₂ en erupciones volcánicas.</div>
+        <div class="def"><strong>2. Síntesis:</strong> realizada por organismos fotosintéticos (plantas, algas, ciertas bacterias). La fotosíntesis combina CO₂ + H₂O + luz → materia orgánica + O₂. El CO₂ inorgánico se convierte en compuesto orgánico asimilable.</div>
+        <div class="def"><strong>3. Fijado:</strong> el carbono se almacena en <em>sumideros de carbono</em> (océanos, biomasa vegetal y animal, rocas sedimentarias calizas, yacimientos de recursos fósiles). La destrucción de estos aumenta la concentración de carbono en la atmósfera.</div>
+        <div class="formula">CO₂ + H₂O + luz → CH₂O (materia orgánica) + O₂</div>
+      </div>
+    </div>
+
+    <div class="concept-block">
+      <div class="concept-header" onclick="toggleConcept(this)">
+        <h3>🌬 Ciclo del Nitrógeno</h3><span>▼</span>
+      </div>
+      <div class="concept-body">
+        <div class="def"><strong>Reserva principal:</strong> la atmósfera (78% de N₂). Problema: las plantas no pueden usar N₂ gaseoso directamente; lo necesitan en forma de ión nitrato (NO₃⁻) o amonio (NH₄⁺).</div>
+        <p>Transformación del N₂ gaseoso a forma disponible:</p>
+        <div class="def"><strong>Fijación biológica:</strong> bacterias (libres o asociadas a plantas leguminosas) convierten N₂ → NO₃⁻ o NH₄⁺. Es el mecanismo MÁS IMPORTANTE para incorporar N al suelo.</div>
+        <div class="def"><strong>Fijación inorgánica:</strong> rayos, proceso industrial (Haber-Bosch).</div>
+        <p>Ruta del nitrógeno:</p>
+        <p>Atmósfera (N₂) → bacterias fijadoras → suelo (NO₃⁻/NH₄⁺) → plantas (proteínas) → herbívoros → carnívoros → descomponedores → suelo</p>
+        <div class="tip">💡 Solo los animales pueden obtener nitrógeno ORGÁNICO (comiendo plantas u otros animales). Las plantas toman nitrógeno MINERAL del suelo.</div>
+      </div>
+    </div>
+
+    <div class="concept-block">
+      <div class="concept-header" onclick="toggleConcept(this)">
+        <h3>⚗️ Ciclo del Fósforo</h3><span>▼</span>
+      </div>
+      <div class="concept-body">
+        <div class="def"><strong>Fósforo:</strong> elemento esencial para el crecimiento de las plantas. Es uno de los más problemáticos por su escasez relativa. No tiene fase gaseosa significativa.</div>
+        <p>Ruta del fósforo:</p>
+        <div class="def">Rocas y sedimentos marinos → meteorización lenta → fosfato (PO₄³⁻) en solución del suelo → plantas (compuestos orgánicos) → cadena trófica → descomposición → vuelta al suelo.</div>
+        <p>A diferencia del nitrógeno y el carbono, el fósforo <strong>no tiene reserva atmosférica</strong>; su principal reserva son las rocas y los sedimentos.</p>
+        <div class="tip">💡 El fósforo es el nutriente "cuello de botella" más común en ecosistemas acuáticos.</div>
+      </div>
+    </div>
+
+    <h3 style="font-family:'Syne',sans-serif;margin:1.5rem 0 1rem;color:var(--accent3);">Tabla Comparativa: Los 3 Ciclos de Nutrientes</h3>
+    <table class="study-table">
+      <tr><th>Aspecto</th><th>Carbono (C)</th><th>Nitrógeno (N)</th><th>Fósforo (P)</th></tr>
+      <tr><td>Reserva principal</td><td>Atmósfera (CO₂), océanos</td><td>Atmósfera (78% N₂)</td><td>Rocas y sedimentos</td></tr>
+      <tr><td>Forma asimilable</td><td>CO₂ (fotosíntesis)</td><td>NO₃⁻ / NH₄⁺</td><td>PO₄³⁻</td></tr>
+      <tr><td>Fase gaseosa</td><td>Sí (CO₂, CH₄)</td><td>Sí (N₂)</td><td>No</td></tr>
+      <tr><td>Fijadores clave</td><td>Organismos fotosintéticos</td><td>Bacterias (libres/leguminosas)</td><td>Meteorización de rocas</td></tr>
+      <tr><td>Problema ambiental</td><td>Efecto invernadero (CO₂ excess)</td><td>Eutrofización, lluvia ácida</td><td>Escasez relativa, eutrofización</td></tr>
+    </table>
+  </div>
+
+  <div id="u2-interacciones" class="sub-section">
+    <div class="concept-block">
+      <div class="concept-header" onclick="toggleConcept(this)">
+        <h3>🔗 Interacciones Intraespecíficas</h3><span>▼</span>
+      </div>
+      <div class="concept-body">
+        <div class="def"><strong>Interacciones intraespecíficas:</strong> ocurren entre individuos de la <em>misma especie</em>.</div>
+        <p>Tipos:</p>
+        <div class="def"><strong>Cooperación (benéfica):</strong> individuos se ayudan mutuamente (manadas que cazan juntas).</div>
+        <div class="def"><strong>Competencia intraespecífica:</strong> por recursos. Solo beneficia a los mejor adaptados.</div>
+        <div class="def"><strong>Territorialidad:</strong> defensa de un área. Solo beneficia a los más fuertes.</div>
+      </div>
+    </div>
+
+    <div class="concept-block">
+      <div class="concept-header" onclick="toggleConcept(this)">
+        <h3>🌐 Interacciones Interespecíficas</h3><span>▼</span>
+      </div>
+      <div class="concept-body">
+        <div class="def"><strong>Interacciones interespecíficas:</strong> ocurren entre individuos de <em>diferentes especies</em>. Se dividen en antagónicas y simbióticas.</div>
+
+        <p><strong>RELACIONES ANTAGÓNICAS</strong> (beneficio solo para UNA especie, la otra se perjudica):</p>
+        <div class="def"><strong>Depredación:</strong> un predador mata y consume a su presa (+/-).</div>
+        <div class="def"><strong>Parasitismo:</strong> el parásito se beneficia a costa del hospedero, sin matarlo inmediatamente (+/-).</div>
+        <div class="def"><strong>Competencia interespecífica:</strong> dos especies compiten por el mismo recurso (-/-).</div>
+
+        <p><strong>RELACIONES SIMBIÓTICAS</strong> (beneficio común):</p>
+        <div class="def"><strong>Mutualismo:</strong> ambas especies se benefician (+/+). Ej: abejas y flores.</div>
+        <div class="def"><strong>Comensalismo:</strong> una especie se beneficia y la otra no se ve afectada (+/0). Ej: rémoras y tiburones.</div>
+        <div class="def"><strong>Cooperación:</strong> ambas se benefician sin dependencia absoluta (+/+).</div>
+
+        <table class="study-table" style="margin-top:1rem;">
+          <tr><th>Relación</th><th>Especie A</th><th>Especie B</th><th>Ejemplo</th></tr>
+          <tr><td>Depredación</td><td>+</td><td>–</td><td>León-cebra</td></tr>
+          <tr><td>Parasitismo</td><td>+</td><td>–</td><td>Garrapata-perro</td></tr>
+          <tr><td>Competencia</td><td>–</td><td>–</td><td>Dos plantas por luz</td></tr>
+          <tr><td>Mutualismo</td><td>+</td><td>+</td><td>Abeja-flor</td></tr>
+          <tr><td>Comensalismo</td><td>+</td><td>0</td><td>Rémora-tiburón</td></tr>
+        </table>
+      </div>
+    </div>
+
+    <div class="concept-block">
+      <div class="concept-header" onclick="toggleConcept(this)">
+        <h3>🌱 El Suelo y su Rol en los Ciclos</h3><span>▼</span>
+      </div>
+      <div class="concept-body">
+        <div class="def"><strong>El suelo:</strong> desempeña un papel fundamental en los ciclos de la naturaleza. Almacena y procesa materia orgánica que incluye carbono, nitrógeno y fósforo.</div>
+        <p>Las bacterias del suelo son clave:</p>
+        <p>• Convierten N₂ atmosférico → nitrógeno mineral (NO₃⁻, NH₄⁺)<br>
+           • Descomponen materia orgánica liberando nutrientes<br>
+           • Ciclan el fósforo mediante descomposición</p>
+      </div>
+    </div>
+  </div>
+
+  <div id="u2-mnemonic2" class="sub-section">
+    <h3 style="font-family:'Syne',sans-serif;margin-bottom:1rem;color:var(--accent3);">🧠 Técnicas de Memorización — Ecosistemas</h3>
+
+    <div class="mnemonic-box">
+      <div class="mnemonic-title">📌 ATH — Los 3 tipos de ecosistemas</div>
+      <div class="mnemonic-content">
+        <span class="mnemonic-word">A</span>cuático (marino + agua dulce)<br>
+        <span class="mnemonic-word">T</span>errestre (bosques, matorrales, herbazales, tundra, desierto)<br>
+        <span class="mnemonic-word">H</span>íbrido (pantano, ciénaga — inundable)<br><br>
+        <em>"ATH = A Tres Hay"</em>
+      </div>
+    </div>
+
+    <div class="mnemonic-box">
+      <div class="mnemonic-title">📌 CNF — Los 3 ciclos de nutrientes</div>
+      <div class="mnemonic-content">
+        <span class="mnemonic-word">C</span>arbono — fases: Producción, Síntesis, Fijado<br>
+        <span class="mnemonic-word">N</span>itrógeno — bacterias fijadoras son lo más importante<br>
+        <span class="mnemonic-word">F</span>ósforo — sin fase gaseosa, viene de las rocas<br><br>
+        <em>"Carbono: el que respira. Nitrógeno: el de las bacterias. Fósforo: el de las rocas."</em>
+      </div>
+    </div>
+
+    <div class="mnemonic-box">
+      <div class="mnemonic-title">📌 Interacciones — El tablero +/-/0</div>
+      <div class="mnemonic-content">
+        <span class="mnemonic-word">Antagónicas</span> = siempre hay un perdedor<br>
+        → Depredación (+/-), Parasitismo (+/-), Competencia (-/-)<br><br>
+        <span class="mnemonic-word">Simbióticas</span> = coexistencia<br>
+        → Mutualismo (+/+), Comensalismo (+/0), Cooperación (+/+)<br><br>
+        <em>Truco: "MuCo" = MUtualismo y COmensalismo son simbióticas</em>
+      </div>
+    </div>
+
+    <div class="mnemonic-box">
+      <div class="mnemonic-title">📌 Materia vs Energía</div>
+      <div class="mnemonic-content">
+        La <span class="mnemonic-word">MATERIA</span> = se RECICLA (ciclo cerrado) ♻️<br>
+        La <span class="mnemonic-word">ENERGÍA</span> = FLUYE y se pierde como calor ➡️<br><br>
+        <em>"La materia es ahorrativa (se recicla); la energía es despilfarradora (siempre se escapa)"</em>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- QUIZ -->
+<div id="quiz" class="section">
+  <div class="unit-header">
+    <div class="unit-badge">🎯</div>
+    <div>
+      <div class="unit-title">Quiz Interactivo</div>
+      <div class="unit-sub">Responde y obtén calificación inmediata</div>
+    </div>
+  </div>
+
+  <div class="level-selector">
+    <button class="level-btn active" onclick="setLevel('easy',this)">🟢 Fácil</button>
+    <button class="level-btn medium" onclick="setLevel('medium',this)">🟡 Medio</button>
+    <button class="level-btn hard" onclick="setLevel('hard',this)">🔴 Difícil</button>
+  </div>
+
+  <div id="quiz-content"></div>
+</div>
+
+<!-- EXAM -->
+<div id="exam" class="section">
+  <div class="unit-header">
+    <div class="unit-badge">⏱️</div>
+    <div>
+      <div class="unit-title">Simulacro de Parcial</div>
+      <div class="unit-sub">20 preguntas · 45 minutos · Calificación sobre 100</div>
+    </div>
+  </div>
+  <div id="exam-content"></div>
+</div>
+
+<!-- CHEATSHEET -->
+<div id="cheatsheet" class="section">
+  <div class="unit-header">
+    <div class="unit-badge">📋</div>
+    <div>
+      <div class="unit-title">Hoja de Repaso Rápido</div>
+      <div class="unit-sub">Todos los conceptos esenciales de ambas unidades</div>
+    </div>
+  </div>
+
+  <div class="sheet-grid">
+    <div class="sheet-card">
+      <h4>📊 Dinámica Poblacional — Conceptos</h4>
+      <ul style="list-style:none;">
+        <li>Natalidad, Mortalidad, Inmigración, Emigración</li>
+        <li>Resistencia Ambiental = límite al crecimiento</li>
+        <li>r=0 equilibrio / r>0 crecimiento / r<0 decrecimiento</li>
+        <li>Curva J = exponencial (ideal, no perpetua)</li>
+        <li>Curva S = logística (real, llega a K)</li>
+        <li>K = Capacidad de Carga</li>
+        <li>Pirámide A: crecimiento (base ancha)</li>
+        <li>Pirámide B: estable (uniforme)</li>
+        <li>Pirámide C: decadencia (cima ancha)</li>
+        <li>INEC → Contraloría General de la República</li>
+      </ul>
+    </div>
+    <div class="sheet-card">
+      <h4>🌿 Ecosistemas — Tipos</h4>
+      <ul style="list-style:none;">
+        <li>Acuático: Marino / Agua dulce</li>
+        <li>Terrestre: Bosques, Matorrales, Herbazales, Tundra, Desierto</li>
+        <li>Híbrido: Pantano, Ciénaga (humedal)</li>
+        <li>Biotopo = parte abiótica</li>
+        <li>Biocenosis = parte biótica</li>
+        <li>Ecosistema = Biotopo + Biocenosis + relaciones</li>
+      </ul>
+    </div>
+    <div class="sheet-card">
+      <h4>⚡ Flujo de Energía</h4>
+      <ul style="list-style:none;">
+        <li>Fuente primaria: el Sol</li>
+        <li>Energía: flujo unidireccional (no se recicla)</li>
+        <li>Materia: ciclo cerrado (sí se recicla)</li>
+        <li>Prod. → Cons. Prim. → Cons. Sec. → Cons. Ter. → Desc.</li>
+        <li>Regla del 10%: se pierde 90% por nivel</li>
+      </ul>
+    </div>
+    <div class="sheet-card">
+      <h4>🔄 Ciclos de Nutrientes</h4>
+      <ul style="list-style:none;">
+        <li>C: Producción → Síntesis → Fijado</li>
+        <li>C: Sumideros = océanos, biomasa, rocas, fósiles</li>
+        <li>N: 78% atmósfera como N₂ (no disponible directo)</li>
+        <li>N: bacterias fijan N₂ → NO₃⁻ o NH₄⁺</li>
+        <li>N: plantas toman mineral; animales toman orgánico</li>
+        <li>P: reserva en rocas y sedimentos (sin fase gaseosa)</li>
+        <li>P: meteorización → PO₄³⁻ → plantas → cadena trófica</li>
+      </ul>
+    </div>
+    <div class="sheet-card">
+      <h4>🔗 Interacciones Ecológicas</h4>
+      <ul style="list-style:none;">
+        <li>Intraespecífica: misma especie</li>
+        <li>Interespecífica: diferente especie</li>
+        <li>Antagónicas: depredación, parasitismo, competencia</li>
+        <li>Simbióticas: mutualismo, comensalismo, cooperación</li>
+        <li>Depredación: +/- (predador/presa)</li>
+        <li>Mutualismo: +/+ (ambas ganan)</li>
+        <li>Comensalismo: +/0 (una gana, otra neutral)</li>
+      </ul>
+    </div>
+    <div class="sheet-card">
+      <h4>🧠 Reglas Mnemotécnicas Clave</h4>
+      <ul style="list-style:none;">
+        <li>BIDE = Births, Inmig., Deaths, Emig.</li>
+        <li>ATH = Acuático, Terrestre, Híbrido</li>
+        <li>Pirámides: A=crece, B=estable, C=decrece</li>
+        <li>J=exponencial sin freno / S=logística con K</li>
+        <li>Materia recicla ♻️ / Energía fluye ➡️</li>
+        <li>N: bacterias son lo más importante</li>
+        <li>P: sin reserva gaseosa (solo rocas)</li>
+      </ul>
+    </div>
+  </div>
+
+  <div style="margin-top:1.5rem;">
+    <h3 style="font-family:'Syne',sans-serif;color:var(--accent3);margin-bottom:1rem;">🔑 Fórmulas y Relaciones Clave</h3>
+    <div class="formula">Ecosistema = Biotopo + Biocenosis + Relaciones</div>
+    <div class="formula">r = 0 → equilibrio | r &gt; 0 → crecimiento | r &lt; 0 → decrecimiento</div>
+    <div class="formula">Fotosíntesis: CO₂ + H₂O + luz solar → CH₂O + O₂</div>
+    <div class="formula">Energía disponible siguiente nivel = 10% del nivel anterior</div>
+    <div class="formula">N asimilable: N₂ → (bacterias) → NO₃⁻ o NH₄⁺</div>
+  </div>
+</div>
+</main>
+
+<script>
+// ===== STATE =====
+let xp = 0;
+let currentLevel = 'easy';
+let quizState = {};
+let examState = {};
+let examTimer = null;
+
+// ===== NAVIGATION =====
+function showSection(id){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  const tabs = document.querySelectorAll('.nav-tab');
+  tabs.forEach(t=>{if(t.getAttribute('onclick')===`showSection('${id}')`){t.classList.add('active');}});
+  if(id==='quiz') renderQuiz();
+  if(id==='exam') renderExam();
+  if(id==='unit1') setTimeout(drawCharts,100);
+  window.scrollTo(0,0);
+}
+
+function showSubSection(unit, id){
+  document.querySelectorAll(`#${unit}-conceptos,#${unit}-diagramas,#${unit}-panama,#${unit}-mnemonic,
+    #${unit}-estructura,#${unit}-energia,#${unit}-ciclos,#${unit}-interacciones,#${unit}-mnemonic2`)
+    .forEach(s=>{if(s)s.classList.remove('active');});
+  const el = document.getElementById(id);
+  if(el) el.classList.add('active');
+  // update subtabs
+  const parent = document.getElementById(unit||id.split('-')[0]);
+  if(parent){
+    parent.querySelectorAll('.sub-tab').forEach(t=>{
+      const onclick = t.getAttribute('onclick');
+      t.classList.toggle('active', onclick && onclick.includes(`'${id}'`));
+    });
+  }
+  if(id==='u1-diagramas') setTimeout(drawCharts,100);
+}
+
+function toggleConcept(header){
+  const body = header.nextElementSibling;
+  const arrow = header.querySelector('span');
+  body.classList.toggle('open');
+  arrow.textContent = body.classList.contains('open') ? '▲' : '▼';
+}
+
+function setLevel(level, btn){
+  currentLevel = level;
+  document.querySelectorAll('.level-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderQuiz();
+}
+
+function addXP(amount){
+  xp += amount;
+  document.getElementById('xp-display').textContent = `XP: ${xp}`;
+}
+
+// ===== ALL QUESTIONS =====
+const allQuestions = [
+  // ========= EASY =========
+  {level:'easy',type:'mc',unit:'U1',
+   q:'¿Cuáles son los cuatro elementos que determinan la dinámica de una población?',
+   opts:['Natalidad, Mortalidad, Inmigración y Emigración','Natalidad, Fertilidad, Densidad y Migración','Nacimientos, Sexo, Edad y Territorio','Recursos, Clima, Competencia y Depredación'],
+   ans:0, fb:'Los cuatro elementos son: Natalidad (B), Mortalidad (D), Inmigración (I) y Emigración (E) — recuerda el acrónimo BIDE.'},
+  {level:'easy',type:'tf',unit:'U1',
+   q:'La curva J representa el crecimiento más real y común en la naturaleza.',
+   ans:false, fb:'FALSO. La curva S (logística) es la más representativa de la naturaleza. La curva J es un modelo ideal que no se mantiene de forma perpetua porque la Resistencia Ambiental la limita.'},
+  {level:'easy',type:'mc',unit:'U1',
+   q:'Si r > 0, ¿qué ocurre en la población?',
+   opts:['La población está en equilibrio','La población crece','La población decrece','No hay cambio en el número de individuos'],
+   ans:1, fb:'Cuando r > 0, hay un crecimiento de la población. Si r=0 hay equilibrio; si r<0 hay decrecimiento.'},
+  {level:'easy',type:'tf',unit:'U1',
+   q:'La Resistencia Ambiental es el factor que limita el crecimiento ilimitado de una población.',
+   ans:true, fb:'VERDADERO. La Resistencia Ambiental depende de los recursos ambientales y las relaciones inter e intraespecíficas.'},
+  {level:'easy',type:'mc',unit:'U1',
+   q:'¿Qué indica la Capacidad de Carga (K)?',
+   opts:['La velocidad máxima de reproducción','El número máximo de individuos que el ambiente puede sostener','La tasa de mortalidad en una población','El porcentaje de emigración anual'],
+   ans:1, fb:'K es el número máximo de individuos que un ambiente puede sostener de manera sostenible. La curva S se estabiliza al llegar a K.'},
+  {level:'easy',type:'mc',unit:'U1',
+   q:'¿Qué tipo de pirámide poblacional indica una población en crecimiento?',
+   opts:['Pirámide B','Pirámide C','Pirámide A','Pirámide D'],
+   ans:2, fb:'La Pirámide A (base ancha, cima estrecha) indica población en crecimiento, con muchos jóvenes y pocos adultos mayores.'},
+  {level:'easy',type:'tf',unit:'U1',
+   q:'El INEC en Panamá está adscrito al Ministerio de Salud.',
+   ans:false, fb:'FALSO. El INEC (Instituto Nacional de Estadística y Censo) está adscrito a la Contraloría General de la República.'},
+  {level:'easy',type:'mc',unit:'U2',
+   q:'¿Cómo se define un ecosistema?',
+   opts:['El conjunto de organismos de una región','Conjunto formado por biotopo y biocenosis y sus relaciones','Solo los factores abióticos de un ambiente','La comunidad de plantas de un área'],
+   ans:1, fb:'El ecosistema es el conjunto formado por un biotopo (componente abiótico) y una biocenosis (componente biótico) y las relaciones entre ellos.'},
+  {level:'easy',type:'mc',unit:'U2',
+   q:'¿Cuál es la fuente primaria y principal de energía en los ecosistemas?',
+   opts:['El agua','El viento','El Sol','El suelo'],
+   ans:2, fb:'El Sol es la fuente primaria y principal de energía que mantiene la vida y moviliza el agua, los minerales y otros componentes físicos del ecosistema.'},
+  {level:'easy',type:'tf',unit:'U2',
+   q:'En un ecosistema, la materia se recicla en un ciclo cerrado.',
+   ans:true, fb:'VERDADERO. La materia se recicla en ciclo cerrado, mientras que la energía fluye unidireccionalmente y no se recicla.'},
+  {level:'easy',type:'mc',unit:'U2',
+   q:'¿Cuál es el ecosistema híbrido o inundable según el documento?',
+   opts:['El bosque tropical','El mar profundo','El pantano o ciénaga','La sabana'],
+   ans:2, fb:'El ecosistema Híbrido es el ecosistema inundable o humedal como el pantano o ciénaga, con suelos cubiertos de agua dulce o salada.'},
+  {level:'easy',type:'mc',unit:'U2',
+   q:'¿Cuál es el porcentaje aproximado del volumen de la atmósfera que ocupa el nitrógeno (N₂)?',
+   opts:['21%','50%','78%','95%'],
+   ans:2, fb:'La atmósfera contiene un 78% de N₂. Sin embargo, las plantas no pueden aprovecharlo en estado gaseoso.'},
+  {level:'easy',type:'tf',unit:'U2',
+   q:'Las plantas pueden absorber nitrógeno directamente de la atmósfera en forma de N₂.',
+   ans:false, fb:'FALSO. Las plantas no pueden usar el N₂ gaseoso. Necesitan el nitrógeno en forma mineral: ión nitrato (NO₃⁻) o amonio (NH₄⁺).'},
+  // ========= MEDIUM =========
+  {level:'medium',type:'mc',unit:'U1',
+   q:'¿Por qué la curva J no es perpetua en la naturaleza?',
+   opts:['Porque la natalidad disminuye con el tiempo','Porque la Resistencia Ambiental limita la progresión geométrica','Porque los individuos migran al alcanzar cierto número','Porque la tasa r siempre se vuelve negativa'],
+   ans:1, fb:'La Resistencia Ambiental (recursos limitados, depredadores, competencia) frena el crecimiento exponencial, haciendo que la curva J sea solo teórica.'},
+  {level:'medium',type:'mc',unit:'U1',
+   q:'Una pirámide poblacional con base estrecha y cima amplia indica:',
+   opts:['Población en crecimiento acelerado','Población estable con alta natalidad','Población en decadencia con baja natalidad','Población en equilibrio con la K'],
+   ans:2, fb:'La Pirámide C (base estrecha, cima ancha) indica población en decadencia: baja natalidad, alta longevidad, más adultos mayores que jóvenes.'},
+  {level:'medium',type:'mc',unit:'U1',
+   q:'¿Cuál es la diferencia principal entre la curva S y la curva J?',
+   opts:['La curva S no tiene en cuenta la mortalidad','La curva J considera la Capacidad de Carga K','La curva S se estabiliza al llegar a K; la curva J es ilimitada','Ambas son equivalentes en la naturaleza'],
+   ans:2, fb:'La curva S (logística) incorpora la Resistencia Ambiental y se estabiliza en la Capacidad de Carga K. La curva J ignora estos límites y crece indefinidamente.'},
+  {level:'medium',type:'open',unit:'U1',
+   q:'Explica qué es la Resistencia Ambiental y cómo influye en el crecimiento poblacional.',
+   keywords:['resistencia ambiental','recursos','relaciones','interespecífica','intraespecífica','limita','curva','exponencial'],
+   fb:'La Resistencia Ambiental es el conjunto de factores del ambiente (recursos limitados, competencia, depredación, enfermedades) que limitan el crecimiento ilimitado de una población. Actúa sobre la curva J transformándola en curva S, frenando el crecimiento al acercarse a K.'},
+  {level:'medium',type:'mc',unit:'U2',
+   q:'¿Cuál es el mecanismo más importante para incorporar nitrógeno al suelo?',
+   opts:['Las erupciones volcánicas','Las bacterias fijadoras de nitrógeno','La lluvia ácida','La meteorización de rocas'],
+   ans:1, fb:'Las bacterias fijadoras de nitrógeno (libres o asociadas a plantas leguminosas) son, sin duda, el mecanismo más importante para convertir N₂ atmosférico en nitrógeno mineral disponible.'},
+  {level:'medium',type:'mc',unit:'U2',
+   q:'¿En qué forma asimilan el nitrógeno las plantas?',
+   opts:['Como N₂ gaseoso directamente de la atmósfera','Como ión nitrato (NO₃⁻) o amonio (NH₄⁺)','Como proteínas animales','Como nitrógeno orgánico disuelto'],
+   ans:1, fb:'Las plantas toman nitrógeno del suelo en forma mineral: ión nitrato (NO₃⁻) o amonio (NH₄⁺), nunca como N₂ gaseoso.'},
+  {level:'medium',type:'mc',unit:'U2',
+   q:'¿Cuáles son las tres fases del ciclo del carbono?',
+   opts:['Respiración, Fotosíntesis, Descomposición','Producción, Síntesis, Fijado','Evaporación, Condensación, Precipitación','Oxidación, Reducción, Neutralización'],
+   ans:1, fb:'El ciclo del carbono se divide en: Producción (emisión de C), Síntesis (fotosíntesis, conversión de CO₂ en materia orgánica) y Fijado (almacenamiento en sumideros).'},
+  {level:'medium',type:'mc',unit:'U2',
+   q:'¿Cuál de las siguientes es una relación simbiótica?',
+   opts:['Depredación','Parasitismo','Competencia interespecífica','Mutualismo'],
+   ans:3, fb:'El mutualismo es una relación simbiótica donde ambas especies se benefician (+/+). Las relaciones simbióticas incluyen: mutualismo, comensalismo y cooperación.'},
+  {level:'medium',type:'tf',unit:'U2',
+   q:'El fósforo tiene una importante reserva en la atmósfera, similar al nitrógeno.',
+   ans:false, fb:'FALSO. El fósforo NO tiene fase gaseosa significativa. Su reserva principal está en las rocas y sedimentos marinos, y accede al suelo mediante la meteorización.'},
+  {level:'medium',type:'mc',unit:'U2',
+   q:'¿Qué son los sumideros de carbono?',
+   opts:['Organismos que producen CO₂ en la respiración','Depósitos que capturan y almacenan carbono de la atmósfera','Bacterias que fijan carbono en el suelo','Procesos de combustión de materia orgánica'],
+   ans:1, fb:'Los sumideros de carbono son depósitos naturales o artificiales que capturan y almacenan carbono. Incluyen: océanos, biomasa vegetal/animal, rocas sedimentarias y yacimientos fósiles.'},
+  {level:'medium',type:'mc',unit:'U2',
+   q:'¿Qué diferencia a las interacciones antagónicas de las simbióticas?',
+   opts:['Las antagónicas ocurren entre la misma especie','En las antagónicas solo una especie se beneficia; en las simbióticas hay beneficio común','Las simbióticas causan la muerte de una especie','No hay diferencia, son sinónimos'],
+   ans:1, fb:'Las relaciones antagónicas benefician solo a una especie (la otra se perjudica). Las simbióticas implican beneficio común. Ejemplos antagónicas: depredación, parasitismo. Simbióticas: mutualismo, comensalismo.'},
+  {level:'medium',type:'open',unit:'U2',
+   q:'Explica la diferencia entre el flujo de energía y el ciclo de la materia en un ecosistema.',
+   keywords:['energía','fluye','unidireccional','materia','recicla','ciclo cerrado','sol','calor'],
+   fb:'La ENERGÍA fluye de manera unidireccional: del Sol a los productores, luego a los consumidores, y finalmente se disipa como calor. No se recicla. La MATERIA (nutrientes) circula en ciclos cerrados: los elementos pasan del suelo a los organismos y vuelven al suelo mediante la descomposición. Frase clave: "la materia se recicla; la energía fluye".'},
+  // ========= HARD =========
+  {level:'hard',type:'mc',unit:'U1',
+   q:'Una población de aves migratorias recibe 500 individuos de otra región y registra 200 nacimientos, 150 muertes y 80 emigraciones. ¿Cuál es el cambio neto en la población?',
+   opts:['470 individuos','570 individuos','600 individuos','380 individuos'],
+   ans:0, fb:'Cambio neto = Natalidad + Inmigración – Mortalidad – Emigración = 200 + 500 – 150 – 80 = 470 individuos de incremento.'},
+  {level:'hard',type:'mc',unit:'U1',
+   q:'En una población que exhibe curva S, ¿cuándo es mayor la tasa de crecimiento?',
+   opts:['Al inicio, cuando la población es pequeña','Cuando N = K/2 (punto de inflexión)','Cuando N se acerca a K','Cuando r = 0'],
+   ans:1, fb:'En el modelo logístico, la tasa de crecimiento absoluta es máxima cuando la población (N) es igual a la mitad de la Capacidad de Carga (N = K/2), en el punto de inflexión de la curva S.'},
+  {level:'hard',type:'open',unit:'U1',
+   q:'Analiza cómo la dinámica poblacional de Panamá se relaciona con los conceptos de curvas de crecimiento y pirámides poblacionales. ¿Qué tipo de pirámide esperarías ver y por qué?',
+   keywords:['pirámide','transición','natalidad','mortalidad','inec','crecimiento','estable','K'],
+   fb:'Panamá está en transición demográfica: la natalidad ha disminuido pero sigue siendo moderada, mientras la esperanza de vida aumenta. Se esperaría una pirámide entre A y B (transicional): base menos ancha que antes, distribución más uniforme en edades medias, lo que indica una tendencia hacia la estabilización. El índice r estaría disminuyendo pero aún positivo.'},
+  {level:'hard',type:'mc',unit:'U2',
+   q:'Si se destruyeran todos los sumideros de carbono naturales del planeta, ¿qué consecuencia directa tendría esto?',
+   opts:['Mayor disponibilidad de nutrientes en el suelo','Aumento de la concentración de carbono en la atmósfera','Disminución de la fotosíntesis por falta de CO₂','Eliminación de las bacterias fijadoras'],
+   ans:1, fb:'Según el documento, "la destrucción de estos depósitos [sumideros] aumenta la concentración del carbono en la atmósfera", contribuyendo al efecto invernadero y cambio climático.'},
+  {level:'hard',type:'mc',unit:'U2',
+   q:'¿Por qué el fósforo es considerado "uno de los más problemáticos" en los ciclos de nutrientes?',
+   opts:['Porque es tóxico para las plantas en altas concentraciones','Por su escasez relativa y ausencia de reserva atmosférica','Porque las bacterias lo destruyen','Porque compite con el nitrógeno'],
+   ans:1, fb:'El fósforo es problemático por su escasez relativa: no tiene reserva atmosférica (a diferencia de C y N), solo proviene de la lenta meteorización de rocas, lo que hace que su disponibilidad sea limitada y dependiente de procesos geológicos lentos.'},
+  {level:'hard',type:'open',unit:'U2',
+   q:'Un lago recibe altas descargas de nitrógeno y fósforo de origen agrícola. Usando los conceptos del ciclo de nutrientes y los niveles tróficos, explica qué proceso ocurriría y sus consecuencias.',
+   keywords:['eutrofización','nitrógeno','fósforo','algas','oxígeno','descomposición','nutrientes','cadena trófica'],
+   fb:'El exceso de N y P provoca eutrofización: proliferación masiva de algas (bloom algal). Al morir estas algas, los descomponedores (bacterias) consumen grandes cantidades de O₂ para descomponerlas, causando hipoxia (bajo oxígeno disuelto). Esto mata peces y otras especies. La cadena trófica se altera drásticamente: sin oxígeno, solo sobreviven microorganismos anaerobios.'},
+  {level:'hard',type:'mc',unit:'U2',
+   q:'¿Cuál es la relación entre las bacterias asociadas a plantas leguminosas y el ciclo del nitrógeno?',
+   opts:['Descomponen materia orgánica liberando N₂ a la atmósfera','Convierten N₂ atmosférico en formas minerales disponibles para las plantas','Absorben NO₃⁻ del suelo y lo convierten en proteínas','Compiten con las plantas por el nitrógeno del suelo'],
+   ans:1, fb:'Las bacterias asociadas a plantas leguminosas (Rhizobium) realizan la fijación biológica de N₂, convirtiendo el N₂ atmosférico en NO₃⁻ o NH₄⁺ que las plantas pueden absorber. Es el mecanismo más importante de incorporación de N al suelo.'},
+  {level:'hard',type:'mc',unit:'U2',
+   q:'En términos de interacciones ecológicas, ¿cómo clasificarías la relación entre bacterias fijadoras de nitrógeno y plantas leguminosas?',
+   opts:['Parasitismo','Comensalismo','Mutualismo','Competencia interespecífica'],
+   ans:2, fb:'Es mutualismo (+/+): la bacteria obtiene refugio y carbohidratos de la planta; la planta obtiene nitrógeno fijado de la bacteria. Ambas se benefician, lo que lo clasifica como relación simbiótica de tipo mutualismo.'},
+  {level:'hard',type:'open',unit:'U1',
+   q:'Compara y contrasta las curvas de supervivencia Tipo I, II y III con ejemplos concretos. ¿Cómo se relacionan con la estrategia reproductiva de cada grupo?',
+   keywords:['supervivencia','tipo I','tipo II','tipo III','mortalidad','edades','mamíferos','peces','aves'],
+   fb:'Tipo I (humanos, grandes mamíferos): alta supervivencia hasta edad avanzada, mortalidad concentrada al final. Estrategia K: pocos descendientes con alta inversión parental. Tipo II (aves): mortalidad constante en todas las edades. Tipo III (peces, plantas): alta mortalidad juvenil, baja mortalidad de los que sobreviven. Estrategia r: muchos descendientes con poca inversión. El tipo de curva refleja la estrategia evolutiva de cada especie.'},
+  {level:'hard',type:'mc',unit:'U2',
+   q:'Si un herbívoro tiene acceso a 10,000 kcal de energía en los productores, ¿cuánta energía estaría disponible para un carnívoro de segundo orden (consumidor terciario)?',
+   opts:['1,000 kcal','100 kcal','10 kcal','1 kcal'],
+   ans:1, fb:'Aplicando la regla del 10%: Productores 10,000 kcal → Consumidor primario 1,000 kcal → Consumidor secundario 100 kcal. El carnívoro de segundo orden (terciario) recibe 100 kcal.'},
+];
+
+// ===== QUIZ RENDER =====
+function getQuestions(level){
+  const q = allQuestions.filter(q=>q.level===level);
+  return q.sort(()=>Math.random()-0.5);
+}
+
+function renderQuiz(){
+  const questions = getQuestions(currentLevel);
+  quizState = {questions, answers:{}, submitted:{}, score:0, done:0};
+  const c = document.getElementById('quiz-content');
+
+  let html = `<div class="quiz-container">
+    <div class="quiz-meta">
+      <div class="quiz-badge">📝 ${questions.length} preguntas</div>
+      <div class="quiz-badge">⭐ Nivel: ${currentLevel==='easy'?'Fácil':currentLevel==='medium'?'Medio':'Difícil'}</div>
+      <div class="quiz-badge" id="quiz-score-badge">✅ Respondidas: 0/${questions.length}</div>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="quiz-progress" style="width:0%"></div></div>`;
+
+  questions.forEach((q,i)=>{
+    html += `<div class="question-card" id="qcard-${i}">
+      <div class="q-type">${q.type==='mc'?'Opción Múltiple':q.type==='tf'?'Verdadero / Falso':'Pregunta Abierta'} · ${q.unit}</div>
+      <div class="q-number">Pregunta ${i+1} de ${questions.length}</div>
+      <div class="q-text">${q.q}</div>`;
+
+    if(q.type==='mc'){
+      html += `<div class="options">`;
+      q.opts.forEach((opt,oi)=>{
+        const key = ['A','B','C','D'][oi];
+        html += `<div class="option" id="opt-${i}-${oi}" onclick="selectMC(${i},${oi})">
+          <div class="option-key">${key}</div><span>${opt}</span></div>`;
+      });
+      html += `</div>`;
+    } else if(q.type==='tf'){
+      html += `<div class="tf-options">
+        <button class="tf-btn" id="tf-${i}-true" onclick="selectTF(${i},true)">✓ Verdadero</button>
+        <button class="tf-btn" id="tf-${i}-false" onclick="selectTF(${i},false)">✗ Falso</button>
+      </div>`;
+    } else {
+      html += `<textarea class="open-textarea" id="open-${i}" placeholder="Escribe tu respuesta aquí..."></textarea>
+        <div class="btn-row"><button class="btn" onclick="submitOpen(${i})">Verificar respuesta</button></div>`;
+    }
+
+    html += `<div class="feedback-block" id="fb-${i}"></div></div>`;
+  });
+
+  html += `<div id="quiz-result" style="display:none;"></div></div>`;
+  c.innerHTML = html;
+}
+
+function selectMC(qi, oi){
+  if(quizState.submitted[qi]) return;
+  const q = quizState.questions[qi];
+  quizState.submitted[qi] = true;
+
+  ['A','B','C','D'].forEach((_,i)=>{
+    const el = document.getElementById(`opt-${qi}-${i}`);
+    if(el){
+      if(i===q.ans) el.classList.add('correct');
+      else if(i===oi && oi!==q.ans) el.classList.add('wrong');
+    }
+  });
+
+  const isCorrect = oi===q.ans;
+  showFeedback(qi, isCorrect, q.fb);
+  updateProgress();
+  if(isCorrect) addXP(currentLevel==='easy'?5:currentLevel==='medium'?10:20);
+}
+
+function selectTF(qi, val){
+  if(quizState.submitted[qi]) return;
+  const q = quizState.questions[qi];
+  quizState.submitted[qi] = true;
+
+  const trueBtn = document.getElementById(`tf-${qi}-true`);
+  const falseBtn = document.getElementById(`tf-${qi}-false`);
+  const isCorrect = val===q.ans;
+
+  if(val===true){
+    trueBtn.classList.add(isCorrect?'correct':'wrong');
+    if(!isCorrect) falseBtn.classList.add('correct');
+  } else {
+    falseBtn.classList.add(isCorrect?'correct':'wrong');
+    if(!isCorrect) trueBtn.classList.add('correct');
+  }
+
+  showFeedback(qi, isCorrect, q.fb);
+  updateProgress();
+  if(isCorrect) addXP(currentLevel==='easy'?5:currentLevel==='medium'?10:20);
+}
+
+function submitOpen(qi){
+  if(quizState.submitted[qi]) return;
+  const q = quizState.questions[qi];
+  const answer = document.getElementById(`open-${qi}`).value.trim().toLowerCase();
+  const hits = q.keywords.filter(k=>answer.includes(k.toLowerCase())).length;
+  const isCorrect = hits >= Math.ceil(q.keywords.length * 0.4);
+  quizState.submitted[qi] = true;
+
+  const fb = document.getElementById(`fb-${qi}`);
+  fb.innerHTML = `<strong>${isCorrect?'✅ Buen análisis!':'📖 Revisa la respuesta modelo:'}</strong><br><br>${q.fb}<br><br>
+    <em style="color:var(--text3)">Palabras clave detectadas: ${hits}/${q.keywords.length}</em>`;
+  fb.className = `feedback-block show ${isCorrect?'correct-fb':'wrong-fb'}`;
+
+  updateProgress();
+  if(isCorrect) addXP(currentLevel==='easy'?8:currentLevel==='medium'?15:30);
+}
+
+function showFeedback(qi, isCorrect, text){
+  const fb = document.getElementById(`fb-${qi}`);
+  fb.innerHTML = `<strong>${isCorrect?'✅ ¡Correcto!':'❌ Incorrecto.'}</strong> ${text}`;
+  fb.className = `feedback-block show ${isCorrect?'correct-fb':'wrong-fb'}`;
+}
+
+function updateProgress(){
+  const total = quizState.questions.length;
+  const done = Object.keys(quizState.submitted).length;
+  const pct = (done/total)*100;
+  document.getElementById('quiz-progress').style.width = pct+'%';
+  document.getElementById('quiz-score-badge').textContent = `✅ Respondidas: ${done}/${total}`;
+
+  if(done===total){
+    const correct = quizState.questions.reduce((acc,q,i)=>{
+      if(q.type==='open') return acc;
+      const sub = quizState.submitted[i];
+      if(sub && q.type==='mc'){
+        const opts = document.querySelectorAll(`#qcard-${i} .option`);
+        // check if correct was selected
+        return acc;
+      }
+      return acc;
+    },0);
+    setTimeout(()=>showQuizSummary(),500);
+  }
+}
+
+function showQuizSummary(){
+  const result = document.getElementById('quiz-result');
+  if(!result) return;
+  let correct=0, total=0;
+  quizState.questions.forEach((q,i)=>{
+    if(q.type!=='open'){
+      total++;
+      const correctEl = document.querySelector(`#qcard-${i} .correct`);
+      if(correctEl && !correctEl.classList.contains('wrong')) correct++;
+    }
+  });
+  const pct = total>0 ? Math.round((correct/total)*100) : 0;
+  const grade = pct>=90?'A':pct>=80?'B':pct>=70?'C':pct>=60?'D':'F';
+  result.style.display='block';
+  result.innerHTML = `<div class="score-card">
+    <div class="score-big">${pct}%</div>
+    <div class="score-label">Calificación: ${grade} · Quiz ${currentLevel==='easy'?'Fácil':currentLevel==='medium'?'Medio':'Difícil'}</div>
+    <div class="score-grid">
+      <div class="score-stat"><div class="score-stat-val">${correct}/${total}</div><div class="score-stat-lbl">Correctas</div></div>
+      <div class="score-stat"><div class="score-stat-val">${pct>=70?'✅':'❌'}</div><div class="score-stat-lbl">${pct>=70?'Aprobado':'Repasa más'}</div></div>
+      <div class="score-stat"><div class="score-stat-val">+${xp}</div><div class="score-stat-lbl">XP total</div></div>
+    </div>
+    <div class="btn-row" style="justify-content:center">
+      <button class="btn" onclick="renderQuiz()">🔄 Repetir quiz</button>
+      <button class="btn outline" onclick="showSection('exam')">⏱ Ir al Parcial</button>
+    </div>
+  </div>`;
+  result.scrollIntoView({behavior:'smooth',block:'center'});
+}
+
+// ===== EXAM =====
+const examQuestions = [
+  {type:'mc',unit:'U1',q:'¿Cuáles son los cuatro elementos que inciden en la dinámica poblacional?',opts:['Natalidad, Mortalidad, Inmigración y Emigración','Reproducción, Sexo, Hábitat y Clima','Edad, Sexo, Densidad y Territorio','Recursos, Luz, Agua y Suelo'],ans:0,pts:5},
+  {type:'tf',unit:'U1',q:'La curva S (Logística) es la más representativa de lo que ocurre en la naturaleza.',ans:true,pts:5},
+  {type:'mc',unit:'U1',q:'¿Qué significa que r < 0 en la dinámica poblacional?',opts:['Hay equilibrio','Hay crecimiento','Hay decrecimiento','La población está en K'],ans:2,pts:5},
+  {type:'mc',unit:'U1',q:'La Pirámide B indica una población:',opts:['En crecimiento acelerado','Estable','En decadencia','Migratoria'],ans:1,pts:5},
+  {type:'tf',unit:'U1',q:'El INEC está adscrito a la Contraloría General de la República.',ans:true,pts:5},
+  {type:'mc',unit:'U1',q:'¿Qué factor NO forma parte de la Resistencia Ambiental?',opts:['Escasez de recursos','Relaciones interespecíficas','Tasa de natalidad propia','Relaciones intraespecíficas'],ans:2,pts:5},
+  {type:'mc',unit:'U1',q:'¿En qué fase de la curva S la tasa de crecimiento es máxima?',opts:['Al inicio (fase lag)','Cuando N = K/2','Cuando N se aproxima a K','Cuando r = 0'],ans:1,pts:5},
+  {type:'tf',unit:'U1',q:'La curva J puede mantenerse indefinidamente en la naturaleza sin ningún límite.',ans:false,pts:5},
+  {type:'mc',unit:'U2',q:'¿Cómo se define un ecosistema según el documento?',opts:['Solo los seres vivos de un área','El biotopo y la biocenosis y sus relaciones','El clima y la flora de una región','Los ciclos de nutrientes de un área'],ans:1,pts:5},
+  {type:'mc',unit:'U2',q:'¿Cuál de los siguientes NO es un tipo de ecosistema terrestre?',opts:['Bosque','Tundra','Ciénaga','Matorral'],ans:2,pts:5},
+  {type:'tf',unit:'U2',q:'En el ecosistema, tanto la materia como la energía se reciclan.',ans:false,pts:5},
+  {type:'mc',unit:'U2',q:'¿Cuáles son las tres fases del ciclo del carbono?',opts:['Respiración, Fotosíntesis, Descomposición','Producción, Síntesis, Fijado','Oxidación, Reducción, Neutralización','Emisión, Absorción, Almacenamiento'],ans:1,pts:5},
+  {type:'mc',unit:'U2',q:'La relación en la que ambas especies se benefician se llama:',opts:['Parasitismo','Comensalismo','Mutualismo','Depredación'],ans:2,pts:5},
+  {type:'tf',unit:'U2',q:'El fósforo tiene una gran reserva en la atmósfera similar al nitrógeno.',ans:false,pts:5},
+  {type:'mc',unit:'U2',q:'¿Qué son los sumideros de carbono?',opts:['Organismos que emiten CO₂','Depósitos que capturan y almacenan carbono','Plantas que realizan la fotosíntesis','Procesos de combustión fósil'],ans:1,pts:5},
+  {type:'mc',unit:'U2',q:'¿En qué forma pueden las plantas absorber el nitrógeno del suelo?',opts:['Como N₂ gaseoso','Como proteínas','Como NO₃⁻ o NH₄⁺','Como aminoácidos libres'],ans:2,pts:5},
+  {type:'tf',unit:'U2',q:'Las relaciones antagónicas incluyen: depredación, parasitismo y competencia.',ans:true,pts:5},
+  {type:'mc',unit:'U2',q:'¿Cuál es el papel más importante de las bacterias en el ciclo del nitrógeno?',opts:['Descomponer proteínas en aminoácidos','Fijar N₂ atmosférico en forma mineral disponible','Convertir NO₃⁻ en N₂ (desnitrificación)','Absorber NH₄⁺ del suelo para las plantas'],ans:1,pts:5},
+  {type:'mc',unit:'U2',q:'El comensalismo es una relación donde:',opts:['Ambas especies se perjudican','Una especie se beneficia y la otra no se ve afectada','Ambas especies se benefician','Una especie parasita a la otra'],ans:1,pts:5},
+  {type:'tf',unit:'U2',q:'Las interacciones intraespecíficas ocurren entre individuos de diferentes especies.',ans:false,pts:5},
+];
+
+let examAnswers = {};
+let examSubmitted = false;
+let timerInterval = null;
+let timeLeft = 45*60;
+
+function renderExam(){
+  if(timerInterval) clearInterval(timerInterval);
+  examAnswers = {};
+  examSubmitted = false;
+  timeLeft = 45*60;
+
+  const c = document.getElementById('exam-content');
+  const questions = examQuestions;
+
+  let html = `<div class="quiz-container">
+    <div class="timer-display" id="exam-timer">45:00</div>
+    <div class="quiz-meta">
+      <div class="quiz-badge">📝 ${questions.length} preguntas</div>
+      <div class="quiz-badge">⭐ 100 puntos totales</div>
+      <div class="quiz-badge">⏱ 45 minutos</div>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="exam-progress" style="width:0%"></div></div>`;
+
+  questions.forEach((q,i)=>{
+    html += `<div class="question-card" id="eqcard-${i}">
+      <div class="q-type">${q.type==='mc'?'Opción Múltiple':'Verdadero / Falso'} · ${q.unit} · ${q.pts} pts</div>
+      <div class="q-number">Pregunta ${i+1} de ${questions.length}</div>
+      <div class="q-text">${q.q}</div>`;
+
+    if(q.type==='mc'){
+      html += `<div class="options">`;
+      q.opts.forEach((opt,oi)=>{
+        const key=['A','B','C','D'][oi];
+        html += `<div class="option" id="eopt-${i}-${oi}" onclick="examSelectMC(${i},${oi})">
+          <div class="option-key">${key}</div><span>${opt}</span></div>`;
+      });
+      html += `</div>`;
+    } else {
+      html += `<div class="tf-options">
+        <button class="tf-btn" id="etf-${i}-true" onclick="examSelectTF(${i},true)">✓ Verdadero</button>
+        <button class="tf-btn" id="etf-${i}-false" onclick="examSelectTF(${i},false)">✗ Falso</button>
+      </div>`;
+    }
+    html += `<div class="feedback-block" id="efb-${i}"></div></div>`;
+  });
+
+  html += `<div class="btn-row"><button class="btn" onclick="submitExam()">📤 Entregar examen</button>
+    <button class="btn outline" onclick="renderExam()">🔄 Reiniciar</button></div>
+    <div id="exam-result" style="display:none;margin-top:1.5rem;"></div></div>`;
+
+  c.innerHTML = html;
+  startTimer();
+}
+
+function startTimer(){
+  if(timerInterval) clearInterval(timerInterval);
+  timerInterval = setInterval(()=>{
+    timeLeft--;
+    const m = Math.floor(timeLeft/60), s = timeLeft%60;
+    const el = document.getElementById('exam-timer');
+    if(el){
+      el.textContent = `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+      el.className = `timer-display${timeLeft<300?' danger':''}`;
+    }
+    if(timeLeft<=0){clearInterval(timerInterval);submitExam();}
+  },1000);
+}
+
+function examSelectMC(qi,oi){
+  if(examSubmitted || examAnswers[qi]!==undefined) return;
+  examAnswers[qi] = oi;
+  ['A','B','C','D'].forEach((_,i)=>{
+    const el = document.getElementById(`eopt-${qi}-${i}`);
+    if(el) el.classList.toggle('selected', i===oi);
+  });
+  updateExamProgress();
+}
+
+function examSelectTF(qi,val){
+  if(examSubmitted || examAnswers[qi]!==undefined) return;
+  examAnswers[qi] = val;
+  document.getElementById(`etf-${qi}-true`)?.classList.toggle('selected',val===true);
+  document.getElementById(`etf-${qi}-false`)?.classList.toggle('selected',val===false);
+  updateExamProgress();
+}
+
+function updateExamProgress(){
+  const done = Object.keys(examAnswers).length;
+  const total = examQuestions.length;
+  const el = document.getElementById('exam-progress');
+  if(el) el.style.width = (done/total*100)+'%';
+}
+
+function submitExam(){
+  if(examSubmitted) return;
+  examSubmitted = true;
+  clearInterval(timerInterval);
+
+  let totalPts=0, correct=0;
+  examQuestions.forEach((q,i)=>{
+    const ans = examAnswers[i];
+    const isCorrect = ans===q.ans;
+    if(isCorrect){correct++;totalPts+=q.pts;}
+
+    if(q.type==='mc'){
+      q.opts.forEach((_,oi)=>{
+        const el = document.getElementById(`eopt-${i}-${oi}`);
+        if(el){
+          el.classList.remove('selected');
+          if(oi===q.ans) el.classList.add('correct');
+          else if(oi===ans && !isCorrect) el.classList.add('wrong');
+        }
+      });
+    } else {
+      const trueBtn = document.getElementById(`etf-${i}-true`);
+      const falseBtn = document.getElementById(`etf-${i}-false`);
+      if(trueBtn){trueBtn.classList.remove('selected');if(q.ans===true)trueBtn.classList.add('correct');else if(ans===true)trueBtn.classList.add('wrong');}
+      if(falseBtn){falseBtn.classList.remove('selected');if(q.ans===false)falseBtn.classList.add('correct');else if(ans===false)falseBtn.classList.add('wrong');}
+    }
+  });
+
+  const grade = totalPts>=90?'A':totalPts>=80?'B':totalPts>=70?'C':totalPts>=60?'D':'F';
+  const result = document.getElementById('exam-result');
+  result.style.display='block';
+  result.innerHTML = `<div class="score-card">
+    <div class="score-big">${totalPts}</div>
+    <div class="score-label">puntos de 100 · Calificación: ${grade}</div>
+    <div class="score-grid">
+      <div class="score-stat"><div class="score-stat-val">${correct}/${examQuestions.length}</div><div class="score-stat-lbl">Correctas</div></div>
+      <div class="score-stat"><div class="score-stat-val">${totalPts>=70?'✅ APROBADO':'❌ REPRUEBA'}</div><div class="score-stat-lbl">Resultado</div></div>
+      <div class="score-stat"><div class="score-stat-val">${Math.round((45*60-timeLeft)/60)} min</div><div class="score-stat-lbl">Tiempo usado</div></div>
+    </div>
+    <p style="font-size:.82rem;color:var(--text2);margin:.75rem 0;">${totalPts>=70?'¡Felicitaciones! Dominas el material. Repasa los conceptos donde fallaste.':'Necesitas repasar más. Usa los módulos de estudio y el quiz antes de intentar el parcial de nuevo.'}</p>
+    <div class="btn-row" style="justify-content:center">
+      <button class="btn" onclick="renderExam()">🔄 Repetir parcial</button>
+      <button class="btn outline" onclick="showSection('unit1')">📖 Repasar Unidad 1</button>
+      <button class="btn outline" onclick="showSection('unit2')">📖 Repasar Unidad 2</button>
+    </div>
+  </div>`;
+  result.scrollIntoView({behavior:'smooth',block:'center'});
+  addXP(totalPts);
+}
+
+// ===== CHARTS =====
+function drawCharts(){
+  drawCurveJ();
+  drawCurveS();
+  drawPyramids();
+  drawRateChart();
+}
+
+function drawCurveJ(){
+  const canvas = document.getElementById('curveJ');
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+  canvas.width = canvas.offsetWidth;
+  canvas.height = 180;
+  const W=canvas.width, H=canvas.height;
+  ctx.clearRect(0,0,W,H);
+
+  // axes
+  ctx.strokeStyle='#243029'; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.moveTo(50,10); ctx.lineTo(50,H-30); ctx.lineTo(W-10,H-30); ctx.stroke();
+
+  // labels
+  ctx.fillStyle='#9dbfa3'; ctx.font='11px DM Mono'; ctx.textAlign='center';
+  ctx.fillText('Tiempo',W/2,H-5);
+  ctx.save(); ctx.translate(14,H/2); ctx.rotate(-Math.PI/2);
+  ctx.fillText('Población (N)',0,0); ctx.restore();
+
+  // J curve
+  ctx.strokeStyle='#4ade80'; ctx.lineWidth=2.5;
+  ctx.beginPath();
+  for(let x=0;x<W-60;x++){
+    const t = x/(W-60);
+    const y = H-30 - (H-50)*Math.exp(t*3-3)*Math.exp(3);
+    const cy = Math.max(12, Math.min(H-30, H-30-(H-50)*Math.pow(t,3)*0.95));
+    if(x===0) ctx.moveTo(50+x, cy); else ctx.lineTo(50+x, cy);
+  }
+  ctx.stroke();
+
+  ctx.fillStyle='#4ade80'; ctx.font='bold 12px Syne'; ctx.textAlign='left';
+  ctx.fillText('↗ Curva J (Exponencial)', 60, 20);
+  ctx.fillStyle='#9dbfa3'; ctx.font='10px DM Mono';
+  ctx.fillText('Crecimiento ilimitado — modelo ideal', 60, 34);
+}
+
+function drawCurveS(){
+  const canvas = document.getElementById('curveS');
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+  canvas.width = canvas.offsetWidth;
+  canvas.height = 180;
+  const W=canvas.width, H=canvas.height;
+  ctx.clearRect(0,0,W,H);
+
+  ctx.strokeStyle='#243029'; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.moveTo(50,10); ctx.lineTo(50,H-30); ctx.lineTo(W-10,H-30); ctx.stroke();
+
+  // K line
+  const kY = 40;
+  ctx.strokeStyle='rgba(251,191,36,0.4)'; ctx.lineWidth=1; ctx.setLineDash([6,4]);
+  ctx.beginPath(); ctx.moveTo(50,kY); ctx.lineTo(W-10,kY); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle='#fbbf24'; ctx.font='11px DM Mono'; ctx.textAlign='left';
+  ctx.fillText('K (Capacidad de Carga)',W-180,kY-5);
+
+  // S curve
+  ctx.strokeStyle='#22c55e'; ctx.lineWidth=2.5;
+  ctx.beginPath();
+  for(let x=0;x<=W-62;x++){
+    const t=(x/(W-62))*10-5;
+    const logistic = 1/(1+Math.exp(-t));
+    const cy = H-30-(H-50-kY)*(logistic)-(kY-10);
+    const cyClamped = Math.max(kY, Math.min(H-31, cy));
+    if(x===0) ctx.moveTo(50+x,cyClamped); else ctx.lineTo(50+x,cyClamped);
+  }
+  ctx.stroke();
+
+  ctx.fillStyle='#22c55e'; ctx.font='bold 12px Syne'; ctx.textAlign='left';
+  ctx.fillText('↗ Curva S (Logística)',60,20);
+  ctx.fillStyle='#9dbfa3'; ctx.font='10px DM Mono';
+  ctx.fillText('Se estabiliza en K — modelo real de la naturaleza',60,34);
+
+  ctx.fillStyle='#9dbfa3'; ctx.font='10px DM Mono';
+  ctx.fillText('N=K/2',55,H/2+5);
+
+  ctx.strokeStyle='rgba(74,222,128,0.25)'; ctx.lineWidth=1; ctx.setLineDash([3,3]);
+  ctx.beginPath(); ctx.moveTo(50,H/2); ctx.lineTo(W/2,H/2); ctx.stroke();
+  ctx.setLineDash([]);
+}
+
+function drawPyramids(){
+  const container = document.getElementById('pyramids');
+  if(!container) return;
+
+  const pyramidData = [
+    {label:'A — Crecimiento',color:'#4ade80',bars:[0.9,0.75,0.6,0.45,0.3,0.2,0.1]},
+    {label:'B — Estable',color:'#22c55e',bars:[0.6,0.57,0.55,0.52,0.5,0.47,0.42]},
+    {label:'C — Decadencia',color:'#86efac',bars:[0.25,0.3,0.45,0.55,0.6,0.6,0.55]},
+  ];
+
+  container.innerHTML = pyramidData.map(p=>{
+    const bars = p.bars.map((w,i)=>{
+      const ages = ['0-14','15-24','25-34','35-44','45-54','55-64','65+'];
+      const width = Math.round(w*120);
+      return `<div style="display:flex;align-items:center;gap:6px;margin:2px 0;">
+        <div style="width:45px;font-size:9px;color:var(--text3);text-align:right">${ages[i]}</div>
+        <div style="width:${width}px;height:14px;background:${p.color};border-radius:2px;opacity:${0.5+w*0.5}"></div>
+      </div>`;
+    }).join('');
+    return `<div class="pyramid">
+      <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:.82rem;color:${p.color};margin-bottom:.5rem;">${p.label}</div>
+      ${bars}
+    </div>`;
+  }).join('');
+}
+
+function drawRateChart(){
+  const canvas = document.getElementById('rateChart');
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+  canvas.width = canvas.offsetWidth;
+  canvas.height = 180;
+  const W=canvas.width, H=canvas.height;
+  ctx.clearRect(0,0,W,H);
+
+  const mid = H/2;
+  ctx.strokeStyle='#243029'; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.moveTo(50,10); ctx.lineTo(50,H-10); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(50,mid); ctx.lineTo(W-10,mid); ctx.stroke();
+
+  ctx.fillStyle='#9dbfa3'; ctx.font='10px DM Mono';
+  ctx.fillText('r = 0',10,mid+4);
+  ctx.fillText('r > 0',10,mid-40);
+  ctx.fillText('r < 0',10,mid+50);
+
+  // zones
+  ctx.fillStyle='rgba(74,222,128,0.08)';
+  ctx.fillRect(51,10,W-61,mid-10);
+  ctx.fillStyle='rgba(248,113,113,0.06)';
+  ctx.fillRect(51,mid,W-61,H-20-mid);
+
+  ctx.fillStyle='rgba(74,222,128,0.6)'; ctx.font='bold 11px Syne'; ctx.textAlign='center';
+  ctx.fillText('⬆ CRECIMIENTO POBLACIONAL',W/2,mid-20);
+  ctx.fillStyle='rgba(248,113,113,0.7)';
+  ctx.fillText('⬇ DECRECIMIENTO POBLACIONAL',W/2,mid+30);
+  ctx.fillStyle='#fbbf24';
+  ctx.fillText('── EQUILIBRIO (r=0) ──',W/2,mid-5);
+}
+
+// ===== INIT =====
+window.onload = () => {
+  renderQuiz();
+  setTimeout(()=>{
+    // open first concept in unit1
+    document.querySelectorAll('.concept-header').forEach((h,i)=>{
+      if(i===0) toggleConcept(h);
+    });
+  },100);
+};
+</script>
+</body>
+</html>
